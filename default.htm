@@ -1,2 +1,77 @@
+<html>
+<head>
+    <script>
+        function getCookie(name) {
+            let v = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
+            return v ? v[2] : null;
+        }
 
-<h1>Roguelike v0.00002b</h1>
+        var authToken = getCookie("auth");
+
+        function apiCall(verb, name, data, handleResponse) {
+            let xhr = new XMLHttpRequest();
+            xhr.open(verb, "/api" + name);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            if (authToken) {
+                xhr.setRequestHeader('Authorization', 'Bearer ' + authToken);
+            }
+            if (data)
+                xhr.send(JSON.stringify(data));
+            else
+                xhr.send();
+            xhr.onload = () => {
+                if (xhr.status == 200) {
+                    let response = JSON.parse(xhr.responseText);
+                    if (!response.isSuccess) {
+                        alert(response.errorMessage);
+                        return;
+                    }
+                    handleResponse(response.data);
+                }
+                else if (xhr.status == 401) {
+                    alert("not authorized");
+                }
+                else {
+                    alert(xhr.responseText);
+                }
+            };
+        }
+
+        function apiGetCall(name, handleResponse) {
+            apiCall("GET", name, null, handleResponse);
+        }
+
+        function apiPostCall(name, data, handleResponse) {
+            apiCall("POST", name, data, handleResponse);
+        }
+
+        function registerButtons() {
+        }
+
+        function setUserInfo(text) {
+            document.getElementById("user-info").innerText = text;
+        }
+
+        function loadUserInfo() {
+            if (!authToken) {
+                setUserInfo("not logged in");
+                return;
+            }
+            apiGetCall("/account/me", (user) => {
+                setUserInfo(user.name + " " + user.id);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded',
+            (e) => {
+                registerButtons();
+                loadUserInfo();
+            });
+    </script>
+</head>
+<body>
+    <h1>Roguelike v0.00002b</h1>
+    <div>Account <span id="user-info"></span></div>
+
+</body>
+</html>
