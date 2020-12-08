@@ -2,34 +2,106 @@
 <head>
     <script src="/static/api.js"></script>
     <script>
-        function registerButtons() {
-        }
-
-        function setUserInfo(text) {
-            document.getElementById("user-info").innerText = text;
-        }
-
-        function loadUserInfo() {
-            if (!authToken) {
-                setUserInfo("not logged in");
-                return;
+        function registerClickOnClass(className, callback) {
+            for (let button of document.getElementsByClassName(className)) {
+                button.addEventListener("click", (e) => callback(e));
             }
-            apiGetCall("/account/me",
-                (user) => {
-                    setUserInfo(user.name + " " + user.id);
-                });
         }
 
-        document.addEventListener('DOMContentLoaded',
-            (e) => {
-                registerButtons();
-                loadUserInfo();
-            });
+        var loadJson = (name) => new Promise(resolve => {
+            let xhr = new XMLHttpRequest();
+            xhr.open("GET", name);
+            xhr.send();
+            xhr.onload = () => {
+                if (xhr.status === 200) {
+                    let data = JSON.parse(xhr.responseText);
+                    resolve(data);
+                } else {
+                    alert(xhr.responseText);
+                }
+            };
+        });
+
+        async function startGame() {
+
+            let unitTypes = (await loadJson("unitTypes.json")).reduce((a, x) => { a[x.id] = x; return a }, {});
+
+            function registerButtons() {
+                registerClickOnClass("create-test-lane",
+                    () => {
+                        setLane([
+                            { "id": "test1" },
+                            { "id": "test2" },
+                            { "id": "test3" }
+                        ]);
+                    });
+                registerClickOnClass("save",
+                    () => {
+                        let units = JSON.parse(document.getElementById("lane").value);
+                        setLane(units);
+                        apiPostCall("/player/lane",
+                            {
+                                id: "default",
+                                units: units
+                            });
+                    });
+                registerClickOnClass("fight",
+                    () => {
+
+                    });
+
+
+            }
+
+            function setUserInfo(text) {
+                document.getElementById("user-info").innerText = text;
+            }
+
+            function setLane(units) {
+                document.getElementById("lane").value = JSON.stringify(units);
+                document.getElementById("setup-printed").innerText = renderSetup(units);
+            }
+
+            function loadUserInfo() {
+                if (!authToken) {
+                    setUserInfo("not logged in");
+                    return;
+                }
+                apiGetCall("/account/me",
+                    (user) => {
+                        setUserInfo(user.name + " " + user.id);
+                    });
+                apiGetCall("/player/lane/default",
+                    lane => {
+                        setLane(lane.units);
+                    });
+            }
+
+            function renderSetup(units) {
+                let result = "";
+                for (let i = 0; i < units.length; i++) {
+                    let unit = units[i];
+                    let type = unitTypes[unit.id];
+                    result += `${i+1} ${type.name} atk:${type.attack} hp:${type.hp}\n`;
+                }
+                return result;
+            }
+
+            registerButtons();
+            loadUserInfo();
+        }
+
+        document.addEventListener('DOMContentLoaded', () => startGame());
     </script>
 </head>
 <body>
     <h1>Roguelike v0.00002c</h1>
     <div>Account <span id="user-info"></span></div>
-
+    <div><textarea name="lane" id="lane"></textarea></div>
+    <button class="create-test-lane">create test lane</button>
+    <button class="save">Save</button>
+    <button class="fight">Fight</button>
+    <div><span id="setup-printed"></span></div>
+    <div>Battle log <span id="battle-log"></span></div>
 </body>
 </html>
