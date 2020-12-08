@@ -23,7 +23,6 @@
         });
 
         async function startGame() {
-
             let unitTypes = (await loadJson("unitTypes.json")).reduce((a, x) => { a[x.id] = x; return a }, {});
 
             function registerButtons() {
@@ -36,10 +35,10 @@
                         ]);
                     });
                 registerClickOnClass("save",
-                    () => {
+                    async () => {
                         let units = JSON.parse(document.getElementById("lane").value);
                         setLane(units);
-                        apiPostCall("/player/lane",
+                        await apiPostCall("/player/lane",
                             {
                                 id: "default",
                                 units: units
@@ -62,19 +61,15 @@
                 document.getElementById("setup-printed").innerText = renderSetup(units);
             }
 
-            function loadUserInfo() {
+            async function loadUserInfo() {
                 if (!authToken) {
                     setUserInfo("not logged in");
                     return;
                 }
-                apiGetCall("/account/me",
-                    (user) => {
-                        setUserInfo(user.name + " " + user.id);
-                    });
-                apiGetCall("/player/lane/default",
-                    lane => {
-                        setLane(lane.units);
-                    });
+                let user = await apiGetCall("/account/me");
+                setUserInfo(user.name + " " + user.id);
+                let lane = await apiGetCall("/player/lane/default");
+                setLane(lane.units);
             }
 
             function renderSetup(units) {
@@ -88,7 +83,7 @@
             }
 
             registerButtons();
-            loadUserInfo();
+            await loadUserInfo();
         }
 
         document.addEventListener('DOMContentLoaded', () => startGame());
