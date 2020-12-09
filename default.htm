@@ -117,7 +117,7 @@
             await loadUserInfo();
 			
 			// Create WebSocket connection.
-			const socket = new WebSocket('wss://localhost:5001/ws');
+            const socket = new WebSocket("wss://" + location.host + "/ws");
 
 			// Connection opened
 			socket.addEventListener('open', function (event) {
