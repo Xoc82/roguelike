@@ -56,8 +56,6 @@
                             });
                         document.getElementById("battle-log").innerText = renderLog(log, laneA, laneB);
                     });
-
-
             }
 
             function setUserInfo(text) {
@@ -67,6 +65,35 @@
             function setLane(units) {
                 document.getElementById("lane").value = JSON.stringify(units);
                 document.getElementById("setup-printed").innerText = renderSetup(units);
+            }
+
+            async function initChat() {
+                //const socket = new WebSocket("wss://" + location.host + "/api/chat/socket");
+                const socket = new WebSocket("wss://" + location.host + "/ws");
+
+                // Connection opened
+                socket.addEventListener('open', function (event) {
+                    socket.send('Hello Server!');
+                });
+
+                // Listen for messages
+                socket.addEventListener('message', function (event) {
+                    let div = document.createElement("div");
+                    div.innerText = event.data;
+                    document.getElementById("chat").append(div);
+                    console.log('Message from server ', event.data);
+                });
+
+                registerClickOnClass("chat-post",
+                    () => {
+                        let text = document.getElementById("chat-message").value;
+                        socket.send(text);
+                    });
+
+                registerClickOnClass("chat-close",
+                    () => {
+                        socket.close();
+                    });
             }
 
             async function loadUserInfo() {
@@ -115,19 +142,7 @@
             }
             registerButtons();
             await loadUserInfo();
-			
-			// Create WebSocket connection.
-            const socket = new WebSocket("wss://" + location.host + "/ws");
-
-			// Connection opened
-			socket.addEventListener('open', function (event) {
-				socket.send('Hello Server!');
-			});
-
-			// Listen for messages
-			socket.addEventListener('message', function (event) {
-				console.log('Message from server ', event.data);
-			});
+            await initChat();
         }
 
         document.addEventListener('DOMContentLoaded', () => startGame());
@@ -142,5 +157,11 @@
     <button class="fight">Fight</button>
     <div><span id="setup-printed"></span></div>
     <div>Battle log <span id="battle-log"></span></div>
+    <h2>Chat</h2>
+    <div id="chat">
+    </div>
+    <div><input id="chat-message" type="text" name="chat-message" /></div>
+    <button class="chat-post">send</button>
+    <button class="chat-close">close</button>
 </body>
 </html>
