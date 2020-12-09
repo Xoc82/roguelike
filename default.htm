@@ -70,11 +70,11 @@
             }
 
             async function loadUserInfo() {
-                if (!authToken) {
-                    setUserInfo("not logged in");
+                let user = await apiGetCall("/account/me");
+                if (!user.authenticated) {
+                    setUserInfo(" not logged in");
                     return;
                 }
-                let user = await apiGetCall("/account/me");
                 setUserInfo(user.name + " " + user.id);
                 let lane = await apiGetCall("/player/lane/default");
                 setLane(lane.units);
@@ -115,6 +115,19 @@
             }
             registerButtons();
             await loadUserInfo();
+			
+			// Create WebSocket connection.
+			const socket = new WebSocket('wss://localhost:5001/ws');
+
+			// Connection opened
+			socket.addEventListener('open', function (event) {
+				socket.send('Hello Server!');
+			});
+
+			// Listen for messages
+			socket.addEventListener('message', function (event) {
+				console.log('Message from server ', event.data);
+			});
         }
 
         document.addEventListener('DOMContentLoaded', () => startGame());
