@@ -94,6 +94,10 @@
                     () => {
                         socket.close();
                     });
+                registerClickOnClass("leaderboard-fights-refresh",
+                    async () => {
+                        await updateLeaderBoardFights();
+                    });
             }
 
             async function loadUserInfo() {
@@ -140,9 +144,21 @@
                 }
                 return result;
             }
+
+            async function updateLeaderBoardFights() {
+                let entries = await apiGetCall("/leaderboard/fights?max=10");
+                let result = "";
+                for (var i = 0; i < entries.length; i++) {
+                    let entry = entries[i];
+                    result += entry.name + ": " + entry.score + "\n";
+                }
+                document.getElementById("leaderboard-fights").innerText = result;
+            }
+
             registerButtons();
             await loadUserInfo();
             await initChat();
+            await updateLeaderBoardFights();
         }
 
         document.addEventListener('DOMContentLoaded', () => startGame());
@@ -157,11 +173,17 @@
     <button class="fight">Fight</button>
     <div><span id="setup-printed"></span></div>
     <div>Battle log <span id="battle-log"></span></div>
+
     <h2>Chat</h2>
     <div id="chat">
     </div>
     <div><input id="chat-message" type="text" name="chat-message" /></div>
     <button class="chat-post">send</button>
     <button class="chat-close">close</button>
+
+    <h2>Leaderboard - Number of fights</h2>
+    <div id="leaderboard-fights">
+    </div>
+    <button class="leaderboard-fights-refresh">refresh</button>
 </body>
 </html>
