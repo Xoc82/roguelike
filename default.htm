@@ -94,6 +94,11 @@
                     () => {
                         socket.close();
                     });
+                registerClickOnClass("leaderboard-fights-recalc",
+                    async () => {
+                        await apiPostCall("/game/update-fights-leaderboard");
+                        await updateLeaderBoardFights();
+                    });
                 registerClickOnClass("leaderboard-fights-refresh",
                     async () => {
                         await updateLeaderBoardFights();
@@ -184,6 +189,7 @@
     <h2>Leaderboard - Number of fights</h2>
     <div id="leaderboard-fights">
     </div>
+    <button class="leaderboard-fights-recalc">recalc</button>
     <button class="leaderboard-fights-refresh">refresh</button>
 </body>
 </html>
