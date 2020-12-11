@@ -148,7 +148,7 @@ async function startGame() {
     registerButtons();
     await loadUserInfo();
     await updateLeaderBoardFights();
-    var recentChat = await apiGetCall("/chat/recent");
+    var recentChat = await apiGetCall("/chat/join");
     for (let i = 0; i < recentChat.length; i++) {
         addChatMessage(recentChat[i]);
     }
