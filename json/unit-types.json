@@ -20,4 +20,11 @@
     "hp": 94,
     "element": 2
   }
+  {
+    "id": "test",
+    "name": "TestMaster",
+    "attack": 96,
+    "hp": 69,
+    "element": 3
+  }
 ]
