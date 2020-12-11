@@ -131,21 +131,30 @@ async function startGame() {
     async function updateLeaderBoardFights() {
         let entries = await apiGetCall("/leaderboard/fights?max=10");
         let result = "";
-        for (var i = 0; i < entries.length; i++) {
+        for (let i = 0; i < entries.length; i++) {
             let entry = entries[i];
             result += entry.name + ": " + entry.score + "\n";
         }
         document.getElementById("leaderboard-fights").innerText = result;
     }
 
+    function addChatMessage(message)
+    {
+        let div = document.createElement("div");
+        div.innerText = message.name + ": " + message.text;
+        document.getElementById("chat").append(div);
+    }
+
     registerButtons();
     await loadUserInfo();
     await updateLeaderBoardFights();
+    var recentChat = await apiGetCall("/chat/recent");
+    for (let i = 0; i < recentChat.length; i++) {
+        addChatMessage(recentChat[i]);
+    }
     await initWebSocket(message => {
-        if(message.type == "chat"){
-            let div = document.createElement("div");
-            div.innerText = message.name + ": " + message.text;
-            document.getElementById("chat").append(div);
+        if(message.type === "chat") {
+            addChatMessage(message);
         }else{
             alert(message);
         }
