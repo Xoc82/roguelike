@@ -5,35 +5,45 @@
     <script src="js/game.js"></script>
 </head>
 <body>
-    <h1>Roguelike v0.00003</h1>
-    <div>Account <span id="user-info"></span></div>
-    <div><textarea name="lane" id="lane"></textarea></div>
-    <button class="create-test-lane">create test lane</button>
-    <button class="save">Save</button>
-    <button class="fight">Fight</button>
-    <div><span id="setup-printed"></span></div>
-    <h2>Battle log</h2>
-    <span id="battle-log"></span>
+    <div id="gui">
+        <h1>Roguelike v0.00003</h1>
+        <div>Account <span id="user-info"></span></div>
 
-    <h2>Units</h2>
-    <div class="unit-list" id="unit-list"></div>
+        <h2>Currencies</h2>
+        <div id="currencies-list"></div>
+        <button data-action="giveMeCC">Give me CC!</button>
 
-    <h2><span id="room-level"></span> Room <span id="room-title"></span></h2>
-    <h2 id="room-description"></h2>
-    <button class="room-collect">Collect Reward</button>
-    <h2>Chat</h2>
-    <div id="chat">
+        <h2>Lane</h2>
+        <div><textarea name="lane" id="lane"></textarea></div>
+        <button data-action="createTestLane">create test lane</button>
+        <button data-action="saveLane">Save</button>
+        <button data-action="fightLane">Fight</button>
+        <div><span id="setup-printed"></span></div>
+
+        <h2>Battle log</h2>
+        <span id="battle-log"></span>
+
+        <h2>Units</h2>
+        <div id="unit-list"></div>
+
+        <h2><span id="room-level"></span> Room <span id="room-title"></span></h2>
+        <h2 id="room-description"></h2>
+        <button data-action="collectRoom">Collect Reward</button>
+
+        <h2>Chat</h2>
+        <div id="chat">
+        </div>
+        <div><input id="chat-message" type="text" name="chat-message" /></div>
+        <button data-action="chatPost">send</button>
+        <button data-action="chatClose">close</button>
+
+        <h2>Leaderboard - Number of fights</h2>
+        <div id="leaderboard-fights">
+        </div>
+        <button data-action="leaderboardFightsRecalc">recalc</button>
+        <button data-action="leaderboardFightsRefresh">refresh</button>
+        <img src="img\001.png" id="test1">
+        <img src="https://www.google.de/logos/doodles/2020/december-holidays-days-2-30-6753651837108830.3-law.gif" alt="test2">
     </div>
-    <div><input id="chat-message" type="text" name="chat-message" /></div>
-    <button class="chat-post">send</button>
-    <button class="chat-close">close</button>
-
-    <h2>Leaderboard - Number of fights</h2>
-    <div id="leaderboard-fights">
-    </div>
-    <button class="leaderboard-fights-recalc">recalc</button>
-    <button class="leaderboard-fights-refresh">refresh</button>
-    <img src="img\001.png" id="test1">
-    <img src="https://www.google.de/logos/doodles/2020/december-holidays-days-2-30-6753651837108830.3-law.gif" alt="test2">
 </body>
 </html>

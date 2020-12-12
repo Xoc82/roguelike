@@ -1,6 +1,12 @@
 ﻿[
   {
     "id": "fights",
-    "description":  "Number of battles fought"
+    "name": "Fights",
+    "description": "Number of battles fought"
+  },
+  {
+    "id": "cc",
+    "name": "Cosmic Coins",
+    "description": "Cosmic Coins"
   }
 ]

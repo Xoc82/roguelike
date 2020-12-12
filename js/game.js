@@ -25,61 +25,23 @@ function arrayToDictionaryById(array) {
 async function startGame() {
     let unitTypes = arrayToDictionaryById(await loadJson("json/unit-types.json"));
     let roomTypes = arrayToDictionaryById(await loadJson("json/room-types.json"));
+    let currencyTypes = arrayToDictionaryById(await loadJson("json/currencies.json"));
     let units = {};
+    let currencies = {};
 
-    function registerButtons() {
-        registerClickOnClass("create-test-lane",
-            () => {
-                var placements = [];
-                for (let unitId in units) {
-                    placements.push({ id: unitId });
-                }
-                setLane(placements);
-            });
-        registerClickOnClass("save",
-            async () => {
-                let units = JSON.parse(document.getElementById("lane").value);
-                setLane(units);
-                await apiPostCall("/player/lane",
-                    {
-                        id: "default",
-                        units: units
-                    });
-            });
-        registerClickOnClass("fight",
-            async () => {
-                let units = JSON.parse(document.getElementById("lane").value);
-                let laneA = { "units": units };
-                let laneB = { "units": units };
-                let log = await apiPostCall("/player/fight",
-                    {
-                        laneA: laneA,
-                        laneB: laneB
-                    });
-                document.getElementById("battle-log").innerText = renderLog(log, laneA, laneB);
-            });
-        registerClickOnClass("leaderboard-fights-recalc",
-            async () => {
-                await apiPostCall("/game/update-fights-leaderboard");
-                await updateLeaderBoardFights();
-            });
-        registerClickOnClass("leaderboard-fights-refresh",
-            async () => {
-                await updateLeaderBoardFights();
-            });
 
-        registerClickOnClass("chat-post",
-            async () => {
-                let text = document.getElementById("chat-message").value;
-                await apiPostCall("/chat", text);
-            });
-
-        registerClickOnClass("room-collect",
-            async () => {
-                await apiPostCall("/player/room/collect");
-                await loadUnits();
-            });
-    }
+    let messageHandlers = {
+        chat: message => {
+            addChatMessage(message);
+        },
+        currency: async message => {
+            await loadCurrencies();
+        },
+        unit: async message => {
+            await loadUnits();
+            renderLane();
+        }
+    };
 
     function setUserInfo(text) {
         document.getElementById("user-info").innerText = text;
@@ -92,7 +54,7 @@ async function startGame() {
 
 
     async function loadUserInfo() {
-        let user = await apiGetCall("/account/me");
+        let user = await apiGetCall("account/me");
         if (!user.authenticated) {
             setUserInfo(" not logged in");
             return false;
@@ -102,7 +64,7 @@ async function startGame() {
     }
 
     async function loadLane() {
-        let lane = await apiGetCall("/player/lane/default");
+        let lane = await apiGetCall("player/lane/default");
         setLane(lane.units);
     }
 
@@ -125,7 +87,7 @@ async function startGame() {
         for (let i = 0; i < placements.length; i++) {
             let placement = placements[i];
             let unit = units[placement.id];
-            if(!unit)
+            if (!unit)
                 continue;
             let type = unitTypes[unit.typeId];
             let stats = getStatesAtLevel(type, unit.level);
@@ -170,7 +132,7 @@ async function startGame() {
     }
 
     async function updateLeaderBoardFights() {
-        let entries = await apiGetCall("/leaderboard/fights?max=10");
+        let entries = await apiGetCall("leaderboard/fights?max=10");
         let result = "";
         for (let i = 0; i < entries.length; i++) {
             let entry = entries[i];
@@ -186,58 +148,130 @@ async function startGame() {
     }
 
     async function joinChat() {
-        var recentChat = await apiGetCall("/chat/join");
+        var recentChat = await apiGetCall("chat/join");
         for (let i = 0; i < recentChat.length; i++) {
             addChatMessage(recentChat[i]);
         }
     }
 
     async function initServerMessages() {
-        await initWebSocket(message => {
-            if (message.type === "chat") {
-                addChatMessage(message);
-            } else {
-                alert(message);
-            }
-        });
+        await initWebSocket(processMessage);
     }
 
     async function loadCurrentRoom() {
-        let room = await apiGetCall("/player/room");
+        let room = await apiGetCall("player/room");
         let roomType = roomTypes[room.type];
         document.getElementById("room-level").innerText = room.level;
         document.getElementById("room-title").innerText = roomType.title;
         document.getElementById("room-description").innerText = roomType.description;
     }
 
+    async function loadCurrencies() {
+        currencies = arrayToDictionaryById(await apiGetCall("player/currency"));
+        var s = "";
+        for (let currencyId in currencyTypes) {
+            var currencyType = currencyTypes[currencyId];
+            let currency = currencies[currencyId] ? currencies[currencyId].value : 0;
+            s += currencyType.name + ": " + currency + "\n";
+        }
+        document.getElementById("currencies-list").innerText = s;
+    }
+
     async function loadUnits() {
-        units = arrayToDictionaryById(await apiGetCall("/player/unit"));
+        units = arrayToDictionaryById(await apiGetCall("player/unit"));
         var s = "";
         for (let unitId in units) {
             let unit = units[unitId];
             let unitType = unitTypes[unit.typeId];
-            s += unitId + " " + unitType.name + " " + unit.level + " <button class='unit-up' data-id='" + unitId + "'>level up</button><br>";
+            s += unitId + " " + unitType.name + " " + unit.level + " <button data-action='levelUp' data-action-args='" + unitId + "'>level up</button><br>";
         }
         document.getElementById("unit-list").innerHTML = s;
     }
 
-    registerClickOnClass("unit-list",
-        async (e) => {
-            let target = e.target;
-            if (target.classList.contains("unit-up")) {
-                e.preventDefault();
-                let unitId = target.dataset.id;
-                await apiPostCall(`/player/unit/${unitId}/up`);
-                await loadUnits();
-                renderLane();
+    function processMessages(messages) {
+        for (var i = 0; i < messages.length; i++) {
+            processMessage(messages[i]);
+        }
+    }
+
+    function processMessage(message) {
+        var handler = messageHandlers[message.type];
+        if (!handler) {
+            alert("message handler missing: " + message.type);
+        }
+        handler(message);
+    }
+
+    let actions = {
+        giveMeCC: async () => {
+            await apiPostCall("player/currency/cc/gain", 100);
+            await loadCurrencies();
+        },
+        levelUp: async unitId => {
+            processMessages(await apiPostCall(`player/unit/${unitId}/up`));
+        },
+
+        createTestLane: () => {
+            var placements = [];
+            for (let unitId in units) {
+                placements.push({ id: unitId });
             }
-        });
+            setLane(placements);
+        },
+        saveLane: async () => {
+            let units = JSON.parse(document.getElementById("lane").value);
+            setLane(units);
+            await apiPostCall("player/lane",
+                {
+                    id: "default",
+                    units: units
+                });
+        },
+        fightLane: async () => {
+            let units = JSON.parse(document.getElementById("lane").value);
+            let laneA = { "units": units };
+            let laneB = { "units": units };
+            let log = await apiPostCall("player/fight",
+                {
+                    laneA: laneA,
+                    laneB: laneB
+                });
+            document.getElementById("battle-log").innerText = renderLog(log, laneA, laneB);
+        },
+        leaderboardFightsRecalc: async () => {
+            await apiPostCall("game/update-fights-leaderboard");
+            await updateLeaderBoardFights();
+        },
+        leaderboardFightsRefresh: async () => {
+            await updateLeaderBoardFights();
+        },
+        chatPost: async () => {
+            let text = document.getElementById("chat-message").value;
+            await apiPostCall("chat", text);
+        },
+        collectRoom: async () => {
+            processMessages(await apiPostCall("player/room/collect"));
+        }
+    }
 
+    document.getElementById("gui").addEventListener("click", (e) => {
+        let target = e.target;
+        if (target.dataset.action) {
+            e.preventDefault();
+            let actionName = target.dataset.action;
+            let actionArgs = target.dataset.actionArgs;
+            let action = actions[actionName];
+            if (action)
+                action(actionArgs);
+            else
+                alert("action missing: " + actionName);
+        }
+    });
 
-    registerButtons();
     if (await loadUserInfo()) {
         await loadUnits();
         await loadLane();
+        await loadCurrencies();
         await updateLeaderBoardFights();
         await initServerMessages();
         await joinChat();
