@@ -77,6 +77,7 @@ async function startGame() {
         registerClickOnClass("room-collect",
             async () => {
                 await apiPostCall("/player/room/collect");
+                await loadUnits();
             });
     }
 
