@@ -124,6 +124,8 @@ async function startGame() {
         for (let i = 0; i < placements.length; i++) {
             let placement = placements[i];
             let unit = units[placement.id];
+            if(!unit)
+                continue;
             let type = unitTypes[unit.typeId];
             let stats = getStatesAtLevel(type, unit.level);
             result += `${i + 1} ${type.name} atk:${stats.attack} hp:${stats.hp}\n`;
