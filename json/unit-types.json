@@ -2,29 +2,69 @@
   {
     "id": "hunter",
     "name": "Hunter",
-    "attack": 64,
-    "hp": 96,
-    "element":  0
+    "element": 0,
+    "stats": [
+      {
+        "level": 1,
+        "attack": 64,
+        "hp": 96
+      },
+      {
+        "level": 100,
+        "attack": 320,
+        "hp": 580
+      }
+    ]
   },
   {
     "id": "carl",
     "name": "Carl",
-    "attack": 46,
-    "hp": 115,
-    "element": 1
+    "element": 1,
+    "stats": [
+      {
+        "level": 1,
+        "attack": 46,
+        "hp": 115
+      },
+      {
+        "level": 100,
+        "attack": 92,
+        "hp": 230
+      }
+    ]
   },
   {
     "id": "jet",
     "name": "JET",
-    "attack": 64,
-    "hp": 94,
-    "element": 2
+    "element": 2,
+    "stats": [
+      {
+        "level": 1,
+        "attack": 64,
+        "hp": 94
+      },
+      {
+        "level": 100,
+        "attack": 92,
+        "hp": 230
+      }
+    ]
   },
   {
     "id": "test",
     "name": "TestMaster",
-    "attack": 96,
-    "hp": 69,
-    "element": 2
+    "element": 2,
+    "stats": [
+      {
+        "level": 1,
+        "attack": 96,
+        "hp": 69
+      },
+      {
+        "level": 100,
+        "attack": 192,
+        "hp": 138
+      }
+    ]
   }
 ]

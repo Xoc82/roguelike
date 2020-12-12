@@ -1,0 +1,11 @@
+[
+  {
+    "id": "story-intro",
+    "title": "Intro",
+    "description": "Welcome to the prototype"
+  },
+  {
+    "id": "combat",
+    "title": "Combat"
+  }
+]

@@ -24,15 +24,17 @@ function arrayToDictionaryById(array) {
 
 async function startGame() {
     let unitTypes = arrayToDictionaryById(await loadJson("json/unit-types.json"));
+    let roomTypes = arrayToDictionaryById(await loadJson("json/room-types.json"));
+    let units = {};
 
     function registerButtons() {
         registerClickOnClass("create-test-lane",
             () => {
-                setLane([
-                    { "id": "carl" },
-                    { "id": "hunter" },
-                    { "id": "jet" }
-                ]);
+                var placements = [];
+                for (let unitId in units) {
+                    placements.push({ id: unitId });
+                }
+                setLane(placements);
             });
         registerClickOnClass("save",
             async () => {
@@ -67,9 +69,14 @@ async function startGame() {
             });
 
         registerClickOnClass("chat-post",
-            async  () => {
+            async () => {
                 let text = document.getElementById("chat-message").value;
                 await apiPostCall("/chat", text);
+            });
+
+        registerClickOnClass("room-collect",
+            async () => {
+                await apiPostCall("/player/room/collect");
             });
     }
 
@@ -77,9 +84,9 @@ async function startGame() {
         document.getElementById("user-info").innerText = text;
     }
 
-    function setLane(units) {
-        document.getElementById("lane").value = JSON.stringify(units);
-        document.getElementById("setup-printed").innerText = renderSetup(units);
+    function setLane(placements) {
+        document.getElementById("lane").value = JSON.stringify(placements);
+        renderLane();
     }
 
 
@@ -87,34 +94,65 @@ async function startGame() {
         let user = await apiGetCall("/account/me");
         if (!user.authenticated) {
             setUserInfo(" not logged in");
-            return;
+            return false;
         }
         setUserInfo(user.name + " " + user.id);
+        return true;
+    }
+
+    async function loadLane() {
         let lane = await apiGetCall("/player/lane/default");
         setLane(lane.units);
     }
 
-    function renderSetup(units) {
+    function getStatesAtLevel(unitType, level) {
+        let i = 1;
+        while (level < unitType.stats[i]) i++;
+        var start = unitType.stats[i - 1];
+        var end = unitType.stats[i];
+        function interpolate(a, b) {
+            return Math.floor(a + (b - a) * (level - start.level) / (end.level - start.level));
+        }
+        return {
+            attack: interpolate(start.attack, end.attack),
+            hp: interpolate(start.hp, end.hp)
+        }
+    }
+
+    function renderSetup(placements) {
         let result = "";
-        for (let i = 0; i < units.length; i++) {
-            let unit = units[i];
-            let type = unitTypes[unit.id];
-            result += `${i + 1} ${type.name} atk:${type.attack} hp:${type.hp}\n`;
+        for (let i = 0; i < placements.length; i++) {
+            let placement = placements[i];
+            let unit = units[placement.id];
+            let type = unitTypes[unit.typeId];
+            let stats = getStatesAtLevel(type, unit.level);
+            result += `${i + 1} ${type.name} atk:${stats.attack} hp:${stats.hp}\n`;
         }
         return result;
     }
 
+    function renderLane() {
+        var placements = JSON.parse(document.getElementById("lane").value);
+        var text = renderSetup(placements);
+        document.getElementById("setup-printed").innerText = text;
+    }
+
     function renderLog(log, laneA, laneB) {
         let result = "";
+        var unitsA = laneA.units.map(u => units[u.id]);
+        var unitsB = laneB.units.map(u => units[u.id]);
         for (let i = 0; i < log.length; i++) {
             let event = log[i];
             result += event.type + " ";
             function getUnitFromId(unitId) {
-                let type = null;
+                let unit = null;
                 if (unitId > 0)
-                    type = unitTypes[laneA.units[+unitId - 1].id];
+                    unit = unitsA[+unitId - 1];
                 if (unitId < 0)
-                    type = unitTypes[laneB.units[-unitId - 1].id];
+                    unit = unitsB[-unitId - 1];
+                if (!unit)
+                    return "";
+                var type = unitTypes[unit.typeId];
                 return type.name;
             }
             if (event.source)
@@ -138,27 +176,70 @@ async function startGame() {
         document.getElementById("leaderboard-fights").innerText = result;
     }
 
-    function addChatMessage(message)
-    {
+    function addChatMessage(message) {
         let div = document.createElement("div");
         div.innerText = message.name + ": " + message.text;
         document.getElementById("chat").append(div);
     }
 
-    registerButtons();
-    await loadUserInfo();
-    await updateLeaderBoardFights();
-    var recentChat = await apiGetCall("/chat/join");
-    for (let i = 0; i < recentChat.length; i++) {
-        addChatMessage(recentChat[i]);
-    }
-    await initWebSocket(message => {
-        if(message.type === "chat") {
-            addChatMessage(message);
-        }else{
-            alert(message);
+    async function joinChat() {
+        var recentChat = await apiGetCall("/chat/join");
+        for (let i = 0; i < recentChat.length; i++) {
+            addChatMessage(recentChat[i]);
         }
-    });
+    }
+
+    async function initServerMessages() {
+        await initWebSocket(message => {
+            if (message.type === "chat") {
+                addChatMessage(message);
+            } else {
+                alert(message);
+            }
+        });
+    }
+
+    async function loadCurrentRoom() {
+        let room = await apiGetCall("/player/room");
+        let roomType = roomTypes[room.type];
+        document.getElementById("room-level").innerText = room.level;
+        document.getElementById("room-title").innerText = roomType.title;
+        document.getElementById("room-description").innerText = roomType.description;
+    }
+
+    async function loadUnits() {
+        units = arrayToDictionaryById(await apiGetCall("/player/unit"));
+        var s = "";
+        for (let unitId in units) {
+            let unit = units[unitId];
+            let unitType = unitTypes[unit.typeId];
+            s += unitId + " " + unitType.name + " " + unit.level + " <button class='unit-up' data-id='" + unitId + "'>level up</button><br>";
+        }
+        document.getElementById("unit-list").innerHTML = s;
+    }
+
+    registerClickOnClass("unit-list",
+        async (e) => {
+            let target = e.target;
+            if (target.classList.contains("unit-up")) {
+                e.preventDefault();
+                let unitId = target.dataset.id;
+                await apiPostCall(`/player/unit/${unitId}/up`);
+                await loadUnits();
+                renderLane();
+            }
+        });
+
+
+    registerButtons();
+    if (await loadUserInfo()) {
+        await loadUnits();
+        await loadLane();
+        await updateLeaderBoardFights();
+        await initServerMessages();
+        await joinChat();
+        await loadCurrentRoom();
+    }
 }
 
 document.addEventListener('DOMContentLoaded', () => startGame());
