@@ -39,7 +39,6 @@ async function startGame() {
         },
         unit: async message => {
             await loadUnits();
-            renderLane();
         }
     };
 
@@ -48,8 +47,7 @@ async function startGame() {
     }
 
     function setLane(placements) {
-        document.getElementById("lane").value = JSON.stringify(placements);
-        renderLane();
+        renderLane(placements);
     }
 
 
@@ -96,16 +94,43 @@ async function startGame() {
         return result;
     }
 
-    function renderLane() {
-        var placements = JSON.parse(document.getElementById("lane").value);
-        var text = renderSetup(placements);
-        document.getElementById("setup-printed").innerText = text;
+    function createUnitNode(unitId) {
+        let unit = units[unitId];
+        let unitTemplate = document.getElementById("unit-template").content;
+        let type = unitTypes[unit.typeId];
+        let stats = getStatesAtLevel(type, unit.level);
+        unitTemplate.querySelector(".unit").dataset.id = unit.id;
+        unitTemplate.querySelector(".unit .header").innerText = type.name;
+        unitTemplate.querySelector(".unit .attack").innerText = stats.attack;
+        unitTemplate.querySelector(".unit .hp .numeric").innerText = stats.hp + "/" + stats.hp;
+        unitTemplate.querySelector(".unit .hp .current").style.width = "100%";
+        unitTemplate.querySelector(".unit .level").innerText = unit.level;
+        return document.importNode(unitTemplate, true);
+    }
+
+    function renderLane(placements) {
+        let parent = document.getElementById("lane");
+
+        let placementNodes = parent.children;
+        for (let i = 0; i < placementNodes.length; i++) {
+            let placementNode = placementNodes[i];
+            let unitNodes = placementNode.children;
+            if (unitNodes.length > 0)
+                unitNodes[0].remove();
+            if (i >= placements.length)
+                continue;
+            let placement = placements[i];
+            let unitId = placement.id;
+            if (!unitId)
+                continue;
+            placementNode.appendChild(createUnitNode(unitId));
+        }
     }
 
     function renderLog(log, laneA, laneB) {
         let result = "";
-        var unitsA = laneA.units.map(u => units[u.id]);
-        var unitsB = laneB.units.map(u => units[u.id]);
+        let unitsA = laneA.units.map(u => units[u.id]);
+        let unitsB = laneB.units.map(u => units[u.id]);
         for (let i = 0; i < log.length; i++) {
             let event = log[i];
             result += event.type + " ";
@@ -179,13 +204,17 @@ async function startGame() {
 
     async function loadUnits() {
         units = arrayToDictionaryById(await apiGetCall("player/unit"));
-        var s = "";
+
+        let parent = document.getElementById("unit-list");
+        parent.querySelectorAll('*').forEach(n => n.remove());
         for (let unitId in units) {
-            let unit = units[unitId];
-            let unitType = unitTypes[unit.typeId];
-            s += unitId + " " + unitType.name + " " + unit.level + " <button data-action='levelUp' data-action-args='" + unitId + "'>level up</button><br>";
+            parent.appendChild(createUnitNode(unitId));
+            let button = document.createElement("button");
+            button.dataset.action = "levelUp";
+            button.dataset.actionArgs = unitId;
+            button.innerText = "level up";
+            parent.appendChild(button);
         }
-        document.getElementById("unit-list").innerHTML = s;
     }
 
     function processMessages(messages) {
@@ -202,6 +231,20 @@ async function startGame() {
         handler(message);
     }
 
+    function getLaneData(node) {
+        let placementNodes = node.children;
+        let data = [];
+        for (let i = 0; i < placementNodes.length; i++) {
+            let placementNode = placementNodes[i];
+            let unitNodes = placementNode.children;
+            if (unitNodes.length > 0)
+                data.push({ id: unitNodes[0].dataset.id });
+            else
+                data.push({ id: null });
+        }
+        return data;
+    }
+
     let actions = {
         giveMeCC: async () => {
             await apiPostCall("player/currency/cc/gain", 100);
@@ -211,16 +254,8 @@ async function startGame() {
             processMessages(await apiPostCall(`player/unit/${unitId}/up`));
         },
 
-        createTestLane: () => {
-            var placements = [];
-            for (let unitId in units) {
-                placements.push({ id: unitId });
-            }
-            setLane(placements);
-        },
         saveLane: async () => {
-            let units = JSON.parse(document.getElementById("lane").value);
-            setLane(units);
+            let units = getLaneData(document.getElementById("lane"));
             await apiPostCall("player/lane",
                 {
                     id: "default",
@@ -228,7 +263,7 @@ async function startGame() {
                 });
         },
         fightLane: async () => {
-            let units = JSON.parse(document.getElementById("lane").value);
+            let units = getLaneData(document.getElementById("lane"));
             let laneA = { "units": units };
             let laneB = { "units": units };
             let log = await apiPostCall("player/fight",
@@ -268,6 +303,7 @@ async function startGame() {
         }
     });
 
+
     if (await loadUserInfo()) {
         await loadUnits();
         await loadLane();
@@ -276,6 +312,149 @@ async function startGame() {
         await initServerMessages();
         await joinChat();
         await loadCurrentRoom();
+
+
+
+        {
+            function getDragAndDropId(node) {
+                if (node.id)
+                    return node.id;
+                let randomId = "rnd" + (Math.random() * 1000000000);
+                node.id = randomId;
+                return randomId;
+            }
+            document.addEventListener("dragstart", e => {
+                let target = e.target;
+                let dragNode = null;
+                let startNode = null;
+                while (target) {
+                    if (!dragNode && target.draggable) {
+                        dragNode = target;
+                    }
+                    if (target.dataset) {
+                        let dropZone = target.dataset.dropZone;
+                        if (!startNode && dropZone) {
+                            startNode = target;
+                        }
+                    }
+                    target = target.parentNode;
+                }
+
+                if (dragNode && startNode) {
+                    e.dataTransfer.setData("start", getDragAndDropId(startNode));
+                    e.dataTransfer.setData("node", getDragAndDropId(dragNode));
+                    console.log("dragstart: " + dragNode.id);
+                    hackyStartNode = startNode;
+                }
+            });
+
+            function findDropZone(target) {
+                while (target) {
+                    if (target.dataset) {
+                        let dropZone = target.dataset.dropZone;
+                        if (dropZone) {
+                            return target;
+                        }
+                    }
+                    target = target.parentNode;
+                }
+                return null;
+            }
+
+            let hackyStartNode = null;
+
+            document.addEventListener("dragover", e => {
+                let start = hackyStartNode;//findDropZone(e.srcElement);
+                let end = findDropZone(e.target);
+                if (hackyStartNode && end) {
+                    let action = getDragAndDropAction(start.dataset.dropZone, end.dataset.dropZone);
+                    if (action) {
+                        console.log("dragover: " + start.dataset.dropZone + end.dataset.dropZone);
+                        e.preventDefault();
+                    }
+                }
+            });
+
+            function dragAndDrop(startNode, dragNode, endNode) {
+                console.log(startNode.id + "=(" + dragNode.id + ")>" + endNode.id);
+
+            }
+
+
+            let dragAndDrops = {
+                list: {
+                    place: (startNode, dragNode, endNode) => {
+                        if (endNode.children.length > 0) {
+                            endNode.children[0].remove();
+                        }
+                        endNode.appendChild(createUnitNode(dragNode.dataset.id));
+                    }
+                },
+                place: {
+                    place: (startNode, dragNode, endNode) => {
+                        if (endNode.children.length > 0) {
+                            let targetNode = endNode.children[0];
+                            endNode.appendChild(dragNode);
+                            startNode.appendChild(targetNode);
+                        } else {
+                            endNode.appendChild(dragNode);
+                        }
+                    },
+                    list: (startNode, dragNode, endNode) => {
+                        dragNode.remove();
+                    }
+                }
+            };
+
+            function getDragAndDropAction(start, end) {
+                let dropList = dragAndDrops[start];
+                if (!dropList)
+                    return null;
+                let action = dropList[end];
+                if (action) {
+                    return action;
+                }
+                return null;
+            }
+
+            document.addEventListener("drop", e => {
+                let endNode = findDropZone(e.target);
+                if (endNode) {
+                    let startId = e.dataTransfer.getData("start");
+                    let nodeId = e.dataTransfer.getData("node");
+                    let startNode = document.getElementById(startId);
+                    let dragNode = document.getElementById(nodeId);
+                    let action = getDragAndDropAction(startNode.dataset.dropZone, endNode.dataset.dropZone);
+                    if (action)
+                        action(startNode, dragNode, endNode);
+                }
+            });
+            /*
+            let units = document.getElementsByClassName("unit");
+            let places = document.getElementsByClassName("unit-place");
+            for (let i = 0; i < units.length; i++) {
+                units[i].addEventListener("dragstart", e => {
+                    e.dataTransfer.setData("text", e.target.id);
+                    console.log("dragstart: " + e.target.id);
+                });
+                units[i].addEventListener("dragover", e => {
+                    console.log("dragover unit");
+                    e.preventDefault();
+                });
+            }
+            for (let i = 0; i < places.length; i++) {
+                places[i].addEventListener("drop", e => {
+                    let id = e.dataTransfer.getData("text");
+                    console.log("drop: " + id);
+                    e.target.append(document.getElementById(id));
+                    //e.preventDefault();
+                });
+                places[i].addEventListener("dragover", e => {
+                    console.log("dragover place");
+                    e.preventDefault();
+                });
+            }*/
+        }
     }
 }
 

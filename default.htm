@@ -1,30 +1,117 @@
+<!doctype html>
+
 <html>
 <head>
+    <meta charset="utf-8">
     <script src="/static/api.js"></script>
     <script src="js/websocket.js"></script>
     <script src="js/game.js"></script>
+    <style>
+        .unit {
+            background-color: #ffffff;
+            box-shadow: 1px 0 15px rgba(0, 0, 0, 0.5);
+            width: 100px;
+            height: 100px;
+            position: relative;
+            display: inline-block;
+            user-select: none;
+        }
+
+            .unit .header {
+                text-align: center;
+                background-color: #E0E0E0;
+                font-size: 150%;
+            }
+
+            .unit .level {
+                text-align: center;
+                background-color: #f0f0ff;
+                font-size: 150%;
+            }
+
+            .unit .attack {
+                text-align: center;
+                background-color: #fff0f0;
+                font-size: 150%;
+            }
+
+            .unit .hp {
+                height: 22px;
+                width: 100%;
+                background-color: #E08080;
+                position: absolute;
+                bottom: 0;
+                left: 0;
+            }
+
+                .unit .hp .numeric {
+                    position: absolute;
+                    text-align: center;
+                    height: 22px;
+                    width: 100%;
+                    z-index: 2;
+                }
+
+                .unit .hp .current {
+                    position: absolute;
+                    z-index: 1;
+                    height: 22px;
+                    background-color: #80E080;
+                }
+
+        .drag-lane {
+            display: grid;
+            grid-auto-columns: 110px;
+            grid-auto-flow: column;
+        }
+        .unit-place {
+            width: 100px;
+            height: 100px;
+            margin: 5px;
+            border: 1px solid #aaaaaa;
+        }
+    </style>
 </head>
 <body>
     <div id="gui">
         <h1>Roguelike v0.00003</h1>
         <div>Account <span id="user-info"></span></div>
 
+        <h2>Sample Hero</h2>
+        <template id="unit-template">
+            <div id="" class="unit" draggable="true">
+                <div class="header">Hunter</div>
+                <div class="level">20</div>
+                <div class="attack">Atk: <span class="value">20</span></div>
+                <div class="hp">
+                    <div class="current" style="width: 70%"></div>
+                    <div class="numeric">70/100</div>
+                </div>
+            </div>
+        </template>
+
         <h2>Currencies</h2>
         <div id="currencies-list"></div>
         <button data-action="giveMeCC">Give me CC!</button>
 
         <h2>Lane</h2>
-        <div><textarea name="lane" id="lane"></textarea></div>
-        <button data-action="createTestLane">create test lane</button>
         <button data-action="saveLane">Save</button>
         <button data-action="fightLane">Fight</button>
-        <div><span id="setup-printed"></span></div>
+        <div id="lane" class="drag-lane">
+            <div id="p0" data-drop-zone="place" class="unit-place"></div>
+            <div id="p1" data-drop-zone="place" class="unit-place"></div>
+            <div id="p2" data-drop-zone="place" class="unit-place"></div>
+            <div id="p3" data-drop-zone="place" class="unit-place"></div>
+            <div id="p4" data-drop-zone="place" class="unit-place"></div>
+            <div id="p5" data-drop-zone="place" class="unit-place"></div>
+        </div>
+        <div class="lane" data-drop-zone="list" id="setup-printed"></div>
 
         <h2>Battle log</h2>
         <span id="battle-log"></span>
 
         <h2>Units</h2>
-        <div id="unit-list"></div>
+        <div data-drop-zone="list" id="unit-list"></div>
 
         <h2><span id="room-level"></span> Room <span id="room-title"></span></h2>
         <h2 id="room-description"></h2>
