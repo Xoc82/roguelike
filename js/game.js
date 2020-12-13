@@ -94,11 +94,13 @@ async function startGame() {
         return result;
     }
 
-    function createUnitNode(unitId) {
+    function createUnitNode(unitId, id) {
         let unit = units[unitId];
         let unitTemplate = document.getElementById("unit-template").content;
         let type = unitTypes[unit.typeId];
         let stats = getStatesAtLevel(type, unit.level);
+        if(id)
+            unitTemplate.querySelector(".unit").id = id;
         unitTemplate.querySelector(".unit").dataset.id = unit.id;
         unitTemplate.querySelector(".unit .header").innerText = type.name;
         unitTemplate.querySelector(".unit .attack").innerText = stats.attack;
@@ -123,7 +125,8 @@ async function startGame() {
             let unitId = placement.id;
             if (!unitId)
                 continue;
-            placementNode.appendChild(createUnitNode(unitId));
+            let unitNode = createUnitNode(unitId, parent.id + "-" + unitId);
+            placementNode.appendChild(unitNode);
         }
     }
 
@@ -375,23 +378,21 @@ async function startGame() {
                 }
             });
 
-            function dragAndDrop(startNode, dragNode, endNode) {
-                console.log(startNode.id + "=(" + dragNode.id + ")>" + endNode.id);
-
-            }
-
-
             let dragAndDrops = {
-                list: {
-                    place: (startNode, dragNode, endNode) => {
+                unitList: {
+                    unitCell: (startNode, dragNode, endNode) => {
+                        let unitId = dragNode.dataset.id;
+                        let unitNodeId = endNode.parentNode.id + "-" + unitId;
+                        let unitNode = document.getElementById(unitNodeId) || createUnitNode(unitId, unitNodeId);
+
                         if (endNode.children.length > 0) {
                             endNode.children[0].remove();
                         }
-                        endNode.appendChild(createUnitNode(dragNode.dataset.id));
+                        endNode.appendChild(unitNode);
                     }
                 },
-                place: {
-                    place: (startNode, dragNode, endNode) => {
+                unitCell: {
+                    unitCell: (startNode, dragNode, endNode) => {
                         if (endNode.children.length > 0) {
                             let targetNode = endNode.children[0];
                             endNode.appendChild(dragNode);
@@ -400,7 +401,7 @@ async function startGame() {
                             endNode.appendChild(dragNode);
                         }
                     },
-                    list: (startNode, dragNode, endNode) => {
+                    unitList: (startNode, dragNode, endNode) => {
                         dragNode.remove();
                     }
                 }

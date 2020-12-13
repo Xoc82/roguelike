@@ -64,7 +64,7 @@
             grid-auto-columns: 110px;
             grid-auto-flow: column;
         }
-        .unit-place {
+        .unit-cell {
             width: 100px;
             height: 100px;
             margin: 5px;
@@ -79,7 +79,7 @@
 
         <h2>Sample Hero</h2>
         <template id="unit-template">
-            <div id="" class="unit" draggable="true">
+            <div class="unit" draggable="true">
                 <div class="header">Hunter</div>
                 <div class="level">20</div>
                 <div class="attack">Atk: <span class="value">20</span></div>
@@ -98,20 +98,19 @@
         <button data-action="saveLane">Save</button>
         <button data-action="fightLane">Fight</button>
         <div id="lane" class="drag-lane">
-            <div id="p0" data-drop-zone="place" class="unit-place"></div>
-            <div id="p1" data-drop-zone="place" class="unit-place"></div>
-            <div id="p2" data-drop-zone="place" class="unit-place"></div>
-            <div id="p3" data-drop-zone="place" class="unit-place"></div>
-            <div id="p4" data-drop-zone="place" class="unit-place"></div>
-            <div id="p5" data-drop-zone="place" class="unit-place"></div>
+            <div data-drop-zone="unitCell" class="unit-cell"></div>
+            <div data-drop-zone="unitCell" class="unit-cell"></div>
+            <div data-drop-zone="unitCell" class="unit-cell"></div>
+            <div data-drop-zone="unitCell" class="unit-cell"></div>
+            <div data-drop-zone="unitCell" class="unit-cell"></div>
+            <div data-drop-zone="unitCell" class="unit-cell"></div>
         </div>
-        <div class="lane" data-drop-zone="list" id="setup-printed"></div>
 
         <h2>Battle log</h2>
         <span id="battle-log"></span>
 
         <h2>Units</h2>
-        <div data-drop-zone="list" id="unit-list"></div>
+        <div data-drop-zone="unitList" id="unit-list"></div>
 
         <h2><span id="room-level"></span> Room <span id="room-title"></span></h2>
         <h2 id="room-description"></h2>
