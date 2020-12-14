@@ -1,27 +1,4 @@
-﻿function registerClickOnClass(className, callback) {
-    for (let button of document.getElementsByClassName(className)) {
-        button.addEventListener("click", (e) => callback(e));
-    }
-}
-
-var loadJson = (name) => new Promise(resolve => {
-    let xhr = new XMLHttpRequest();
-    xhr.open("GET", name);
-    xhr.send();
-    xhr.onload = () => {
-        if (xhr.status === 200) {
-            let data = JSON.parse(xhr.responseText);
-            resolve(data);
-        } else {
-            alert(xhr.responseText);
-        }
-    };
-});
-
-function arrayToDictionaryById(array) {
-    return array.reduce((a, x) => { a[x.id] = x; return a }, {});
-}
-
+﻿
 async function startGame() {
     let unitTypes = arrayToDictionaryById(await loadJson("json/unit-types.json"));
     let roomTypes = arrayToDictionaryById(await loadJson("json/room-types.json"));
@@ -29,18 +6,6 @@ async function startGame() {
     let units = {};
     let currencies = {};
 
-
-    let messageHandlers = {
-        chat: message => {
-            addChatMessage(message);
-        },
-        currency: async message => {
-            await loadCurrencies();
-        },
-        unit: async message => {
-            await loadUnits();
-        }
-    };
 
     function setUserInfo(text) {
         document.getElementById("user-info").innerText = text;
@@ -220,19 +185,6 @@ async function startGame() {
         }
     }
 
-    function processMessages(messages) {
-        for (var i = 0; i < messages.length; i++) {
-            processMessage(messages[i]);
-        }
-    }
-
-    function processMessage(message) {
-        var handler = messageHandlers[message.type];
-        if (!handler) {
-            alert("message handler missing: " + message.type);
-        }
-        handler(message);
-    }
 
     function getLaneData(node) {
         let placementNodes = node.children;
@@ -248,7 +200,7 @@ async function startGame() {
         return data;
     }
 
-    let actions = {
+    registerActions({
         giveMeCC: async () => {
             await apiPostCall("player/currency/cc/gain", 100);
             await loadCurrencies();
@@ -290,19 +242,46 @@ async function startGame() {
         collectRoom: async () => {
             processMessages(await apiPostCall("player/room/collect"));
         }
-    }
+    });
 
-    document.getElementById("gui").addEventListener("click", (e) => {
-        let target = e.target;
-        if (target.dataset.action) {
-            e.preventDefault();
-            let actionName = target.dataset.action;
-            let actionArgs = target.dataset.actionArgs;
-            let action = actions[actionName];
-            if (action)
-                action(actionArgs);
-            else
-                alert("action missing: " + actionName);
+    registerMessageHandlers({
+        chat: message => {
+            addChatMessage(message);
+        },
+        currency: async message => {
+            await loadCurrencies();
+        },
+        unit: async message => {
+            await loadUnits();
+        }
+    });
+
+    registerDragAndDropHandlers({
+        unitList: {
+            unitCell: (startNode, dragNode, endNode) => {
+                let unitId = dragNode.dataset.id;
+                let unitNodeId = endNode.parentNode.id + "-" + unitId;
+                let unitNode = document.getElementById(unitNodeId) || createUnitNode(unitId, unitNodeId);
+
+                if (endNode.children.length > 0) {
+                    endNode.children[0].remove();
+                }
+                endNode.appendChild(unitNode);
+            }
+        },
+        unitCell: {
+            unitCell: (startNode, dragNode, endNode) => {
+                if (endNode.children.length > 0) {
+                    let targetNode = endNode.children[0];
+                    endNode.appendChild(dragNode);
+                    startNode.appendChild(targetNode);
+                } else {
+                    endNode.appendChild(dragNode);
+                }
+            },
+            unitList: (startNode, dragNode, endNode) => {
+                dragNode.remove();
+            }
         }
     });
 
@@ -315,148 +294,8 @@ async function startGame() {
         await initServerMessages();
         await joinChat();
         await loadCurrentRoom();
-
-
-
-        {
-            function getDragAndDropId(node) {
-                if (node.id)
-                    return node.id;
-                let randomId = "rnd" + (Math.random() * 1000000000);
-                node.id = randomId;
-                return randomId;
-            }
-            document.addEventListener("dragstart", e => {
-                let target = e.target;
-                let dragNode = null;
-                let startNode = null;
-                while (target) {
-                    if (!dragNode && target.draggable) {
-                        dragNode = target;
-                    }
-                    if (target.dataset) {
-                        let dropZone = target.dataset.dropZone;
-                        if (!startNode && dropZone) {
-                            startNode = target;
-                        }
-                    }
-                    target = target.parentNode;
-                }
-
-                if (dragNode && startNode) {
-                    e.dataTransfer.setData("start", getDragAndDropId(startNode));
-                    e.dataTransfer.setData("node", getDragAndDropId(dragNode));
-                    console.log("dragstart: " + dragNode.id);
-                    hackyStartNode = startNode;
-                }
-            });
-
-            function findDropZone(target) {
-                while (target) {
-                    if (target.dataset) {
-                        let dropZone = target.dataset.dropZone;
-                        if (dropZone) {
-                            return target;
-                        }
-                    }
-                    target = target.parentNode;
-                }
-                return null;
-            }
-
-            let hackyStartNode = null;
-
-            document.addEventListener("dragover", e => {
-                let start = hackyStartNode;//findDropZone(e.srcElement);
-                let end = findDropZone(e.target);
-                if (hackyStartNode && end) {
-                    let action = getDragAndDropAction(start.dataset.dropZone, end.dataset.dropZone);
-                    if (action) {
-                        console.log("dragover: " + start.dataset.dropZone + end.dataset.dropZone);
-                        e.preventDefault();
-                    }
-                }
-            });
-
-            let dragAndDrops = {
-                unitList: {
-                    unitCell: (startNode, dragNode, endNode) => {
-                        let unitId = dragNode.dataset.id;
-                        let unitNodeId = endNode.parentNode.id + "-" + unitId;
-                        let unitNode = document.getElementById(unitNodeId) || createUnitNode(unitId, unitNodeId);
-
-                        if (endNode.children.length > 0) {
-                            endNode.children[0].remove();
-                        }
-                        endNode.appendChild(unitNode);
-                    }
-                },
-                unitCell: {
-                    unitCell: (startNode, dragNode, endNode) => {
-                        if (endNode.children.length > 0) {
-                            let targetNode = endNode.children[0];
-                            endNode.appendChild(dragNode);
-                            startNode.appendChild(targetNode);
-                        } else {
-                            endNode.appendChild(dragNode);
-                        }
-                    },
-                    unitList: (startNode, dragNode, endNode) => {
-                        dragNode.remove();
-                    }
-                }
-            };
-
-            function getDragAndDropAction(start, end) {
-                let dropList = dragAndDrops[start];
-                if (!dropList)
-                    return null;
-                let action = dropList[end];
-                if (action) {
-                    return action;
-                }
-                return null;
-            }
-
-            document.addEventListener("drop", e => {
-                let endNode = findDropZone(e.target);
-                if (endNode) {
-                    let startId = e.dataTransfer.getData("start");
-                    let nodeId = e.dataTransfer.getData("node");
-                    let startNode = document.getElementById(startId);
-                    let dragNode = document.getElementById(nodeId);
-                    let action = getDragAndDropAction(startNode.dataset.dropZone, endNode.dataset.dropZone);
-                    if (action)
-                        action(startNode, dragNode, endNode);
-                }
-            });
-            /*
-            let units = document.getElementsByClassName("unit");
-            let places = document.getElementsByClassName("unit-place");
-            for (let i = 0; i < units.length; i++) {
-                units[i].addEventListener("dragstart", e => {
-                    e.dataTransfer.setData("text", e.target.id);
-                    console.log("dragstart: " + e.target.id);
-                });
-                units[i].addEventListener("dragover", e => {
-                    console.log("dragover unit");
-                    e.preventDefault();
-                });
-            }
-            for (let i = 0; i < places.length; i++) {
-                places[i].addEventListener("drop", e => {
-                    let id = e.dataTransfer.getData("text");
-                    console.log("drop: " + id);
-                    e.target.append(document.getElementById(id));
-                    //e.preventDefault();
-                });
-                places[i].addEventListener("dragover", e => {
-                    console.log("dragover place");
-                    e.preventDefault();
-                });
-            }*/
-        }
     }
+    initEngine();
 }
 
 document.addEventListener('DOMContentLoaded', () => startGame());
