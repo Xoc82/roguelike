@@ -10,7 +10,7 @@ function registerActions(actions) {
 
 
 function registerDragAndDropHandlers(handlers) {
-    for (let name in allDragAndDropHandlers) {
+    for (let name in handlers) {
         if (!allDragAndDropHandlers[name])
             allDragAndDropHandlers[name] = {};
         let dropHandlers = handlers[name];
@@ -29,7 +29,7 @@ function registerMessageHandlers(handlers) {
 
 
 function processMessages(messages) {
-    for (var i = 0; i < messages.length; i++) {
+    for (let i = 0; i < messages.length; i++) {
         processMessage(messages[i]);
     }
 }
