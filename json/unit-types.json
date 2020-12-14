@@ -2,7 +2,7 @@
   {
     "id": "hunter",
     "name": "Hunter",
-    "element": 0,
+    "element": "wind",
     "stats": [
       {
         "level": 1,
@@ -19,7 +19,7 @@
   {
     "id": "carl",
     "name": "Carl",
-    "element": 1,
+    "element": "water",
     "stats": [
       {
         "level": 1,
@@ -36,7 +36,7 @@
   {
     "id": "jet",
     "name": "JET",
-    "element": 2,
+    "element": "fire",
     "stats": [
       {
         "level": 1,
@@ -53,7 +53,7 @@
   {
     "id": "test",
     "name": "TestMaster",
-    "element": 2,
+    "element": "fire",
     "stats": [
       {
         "level": 1,
