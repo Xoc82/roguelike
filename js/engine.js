@@ -15,7 +15,7 @@ function registerDragAndDropHandlers(handlers) {
             allDragAndDropHandlers[name] = {};
         let dropHandlers = handlers[name];
         let allDropHandlers = allDragAndDropHandlers[name];
-        for (let n in allDragAndDropHandlers) {
+        for (let n in dropHandlers) {
             allDropHandlers[n] = dropHandlers[n];
         }
     }
