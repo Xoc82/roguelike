@@ -51,8 +51,10 @@ async function startGame() {
         let unitTemplate = document.getElementById("unit-template").content;
         let type = unitTypes[unit.typeId];
         let stats = getStatesAtLevel(type, unit.level);
-        if(id)
+        if (id)
             unitTemplate.querySelector(".unit").id = id;
+        else
+            unitTemplate.querySelector(".unit").removeAttribute("id");
         unitTemplate.querySelector(".unit").dataset.id = unit.id;
         unitTemplate.querySelector(".unit .header").innerText = type.name;
         unitTemplate.querySelector(".unit .attack").innerText = stats.attack;
@@ -82,10 +84,10 @@ async function startGame() {
         }
     }
 
-    function renderLog(log, laneA, laneB) {
+    function renderLog(log, laneA, allUnitsA, laneB, allUnitsB) {
         let result = "";
-        let unitsA = laneA.units.map(u => units[u.id]);
-        let unitsB = laneB.units.map(u => units[u.id]);
+        let unitsA = laneA.units.map(u => allUnitsA[u.id]);
+        let unitsB = laneB.units.map(u => allUnitsB[u.id]);
         for (let i = 0; i < log.length; i++) {
             let event = log[i];
             result += event.type + " ";
@@ -201,10 +203,11 @@ async function startGame() {
                 });
         },
         fightEncounter: async () => {
-            let units = getLaneData(document.getElementById("lane"));
-            let lane = { "units": units };
+            let lane = { "units": getLaneData(document.getElementById("lane")) };
             let log = await apiPostCall("player/room/fight", lane);
-            document.getElementById("battle-log").innerText = renderLog(log, laneA, laneB);
+            let encounterLane = { "units": getLaneData(document.getElementById("encounter-lane")) };
+            document.getElementById("battle-log").innerText =
+                renderLog(log, lane, units, encounterLane, encounterUnits);
         },
         leaderboardFightsRecalc: async () => {
             await apiPostCall("game/update-fights-leaderboard");
@@ -219,6 +222,9 @@ async function startGame() {
         },
         collectRoom: async () => {
             processMessages(await apiPostCall("player/room/collect"));
+        },
+        newRun: async() => {
+            processMessages(await apiPostCall("player/new-run"));
         }
     });
 
@@ -243,6 +249,7 @@ async function startGame() {
             encounterNode.style.display = "none";
             if (room.type === "combat") {
                 encounterNode.style.display = "block";
+                encounterUnits = room.encounter.units;
                 fillLane(laneNode, arrayToDictionaryById(room.encounter.units), room.encounter.lane.units);
             }
         }
@@ -253,7 +260,7 @@ async function startGame() {
             unitCell: (startNode, dragNode, endNode) => {
                 let unitId = dragNode.dataset.id;
                 let unitNodeId = endNode.parentNode.id + "-" + unitId;
-                let unitNode = document.getElementById(unitNodeId) || createUnitNode(unitId, unitNodeId);
+                let unitNode = document.getElementById(unitNodeId) || createUnitNode(units[unitId], unitNodeId);
 
                 if (endNode.children.length > 0) {
                     endNode.children[0].remove();
