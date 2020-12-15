@@ -217,7 +217,9 @@ async function startGame() {
             await updateLeaderBoardFights();
         },
         chatPost: async () => {
-            let text = document.getElementById("chat-message").value;
+            let input = document.getElementById("chat-message");
+            let text = input.value;
+            input.value = "";
             await apiPostCall("chat", text);
         },
         collectRoom: async () => {
