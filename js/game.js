@@ -80,6 +80,7 @@ async function startGame() {
             if (!unitId)
                 continue;
             let unitNode = createUnitNode(units[unitId], laneNode.id + "-" + unitId);
+            unitNode.querySelector(".unit").draggable = !!placementNode.dataset.dropZone;
             placementNode.appendChild(unitNode);
         }
     }
@@ -161,7 +162,9 @@ async function startGame() {
         let parent = document.getElementById("unit-list");
         parent.querySelectorAll('*').forEach(n => n.remove());
         for (let unitId in units) {
-            parent.appendChild(createUnitNode(units[unitId]));
+            let unitNode = createUnitNode(units[unitId]);
+            unitNode.querySelector(".unit").draggable = !!parent.dataset.dropZone;
+            parent.appendChild(unitNode);
             let button = document.createElement("button");
             button.dataset.action = "levelUp";
             button.dataset.actionArgs = unitId;
