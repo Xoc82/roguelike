@@ -84,10 +84,10 @@ async function startGame() {
         }
     }
 
-    function renderLog(log, laneA, allUnitsA, laneB, allUnitsB) {
+    function renderLog(log, squadA, squadB) {
         let result = "";
-        let unitsA = laneA.units.map(u => allUnitsA[u.id]);
-        let unitsB = laneB.units.map(u => allUnitsB[u.id]);
+        let unitsA = squadA.order.map(u => squadA.units[u.id]);
+        let unitsB = squadB.order.map(u => squadB.units[u.id]);
         for (let i = 0; i < log.length; i++) {
             let event = log[i];
             result += event.type + " ";
@@ -204,10 +204,7 @@ async function startGame() {
         },
         fightEncounter: async () => {
             let lane = { "units": getLaneData(document.getElementById("lane")) };
-            let log = await apiPostCall("player/room/fight", lane);
-            let encounterLane = { "units": getLaneData(document.getElementById("encounter-lane")) };
-            document.getElementById("battle-log").innerText =
-                renderLog(log, lane, units, encounterLane, encounterUnits);
+            processMessages(await apiPostCall("player/room/fight", lane));
         },
         leaderboardFightsRecalc: async () => {
             await apiPostCall("game/update-fights-leaderboard");
@@ -250,8 +247,14 @@ async function startGame() {
             if (room.type === "combat") {
                 encounterNode.style.display = "block";
                 encounterUnits = room.encounter.units;
-                fillLane(laneNode, arrayToDictionaryById(room.encounter.units), room.encounter.lane.units);
+                fillLane(laneNode, room.encounter.squad.units, room.encounter.squad.order);
             }
+        },
+        battle: message => {
+            document.getElementById("battle-log").innerText = renderLog(message.log, message.squadA, message.squadB);
+        },
+        achievement: message => {
+            alert("Achievement unlocked: " + message.achievement);
         }
     });
 
