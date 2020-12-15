@@ -93,13 +93,13 @@
             </div>
         </template>
 
+
         <h2>Currencies</h2>
         <div id="currencies-list"></div>
         <button data-action="giveMeCC">Give me CC!</button>
 
         <h2>Lane</h2>
         <button data-action="saveLane">Save</button>
-        <button data-action="fightLane">Fight</button>
         <div id="lane" class="drag-lane">
             <div data-drop-zone="unitCell" class="unit-cell"></div>
             <div data-drop-zone="unitCell" class="unit-cell"></div>
@@ -117,6 +117,17 @@
 
         <h2><span id="room-level"></span> Room <span id="room-title"></span></h2>
         <h2 id="room-description"></h2>
+        <div id="encounter" style="display: none">
+            <div id="encounter-lane" class="drag-lane">
+                <div class="unit-cell"></div>
+                <div class="unit-cell"></div>
+                <div class="unit-cell"></div>
+                <div class="unit-cell"></div>
+                <div class="unit-cell"></div>
+                <div class="unit-cell"></div>
+            </div>
+            <button data-action="fightEncounter">Fight</button>
+        </div>
         <button data-action="collectRoom">Collect Reward</button>
 
         <h2>Chat</h2>

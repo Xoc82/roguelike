@@ -4,6 +4,7 @@ async function startGame() {
     let roomTypes = arrayToDictionaryById(await loadJson("json/room-types.json"));
     let currencyTypes = arrayToDictionaryById(await loadJson("json/currencies.json"));
     let units = {};
+    let encounterUnits = {};
     let currencies = {};
 
 
@@ -12,7 +13,8 @@ async function startGame() {
     }
 
     function setLane(placements) {
-        renderLane(placements);
+        let laneNode = document.getElementById("lane");
+        fillLane(laneNode, units, placements);
     }
 
 
@@ -45,22 +47,7 @@ async function startGame() {
         }
     }
 
-    function renderSetup(placements) {
-        let result = "";
-        for (let i = 0; i < placements.length; i++) {
-            let placement = placements[i];
-            let unit = units[placement.id];
-            if (!unit)
-                continue;
-            let type = unitTypes[unit.typeId];
-            let stats = getStatesAtLevel(type, unit.level);
-            result += `${i + 1} ${type.name} atk:${stats.attack} hp:${stats.hp}\n`;
-        }
-        return result;
-    }
-
-    function createUnitNode(unitId, id) {
-        let unit = units[unitId];
+    function createUnitNode(unit, id) {
         let unitTemplate = document.getElementById("unit-template").content;
         let type = unitTypes[unit.typeId];
         let stats = getStatesAtLevel(type, unit.level);
@@ -75,10 +62,10 @@ async function startGame() {
         return document.importNode(unitTemplate, true);
     }
 
-    function renderLane(placements) {
-        let parent = document.getElementById("lane");
 
-        let placementNodes = parent.children;
+    function fillLane(laneNode, units, placements) {
+
+        let placementNodes = laneNode.children;
         for (let i = 0; i < placementNodes.length; i++) {
             let placementNode = placementNodes[i];
             let unitNodes = placementNode.children;
@@ -90,7 +77,7 @@ async function startGame() {
             let unitId = placement.id;
             if (!unitId)
                 continue;
-            let unitNode = createUnitNode(unitId, parent.id + "-" + unitId);
+            let unitNode = createUnitNode(units[unitId], laneNode.id + "-" + unitId);
             placementNode.appendChild(unitNode);
         }
     }
@@ -152,11 +139,7 @@ async function startGame() {
     }
 
     async function loadCurrentRoom() {
-        let room = await apiGetCall("player/room");
-        let roomType = roomTypes[room.type];
-        document.getElementById("room-level").innerText = room.level;
-        document.getElementById("room-title").innerText = roomType.title;
-        document.getElementById("room-description").innerText = roomType.description;
+        processMessage(await apiGetCall("player/room"));
     }
 
     async function loadCurrencies() {
@@ -176,7 +159,7 @@ async function startGame() {
         let parent = document.getElementById("unit-list");
         parent.querySelectorAll('*').forEach(n => n.remove());
         for (let unitId in units) {
-            parent.appendChild(createUnitNode(unitId));
+            parent.appendChild(createUnitNode(units[unitId]));
             let button = document.createElement("button");
             button.dataset.action = "levelUp";
             button.dataset.actionArgs = unitId;
@@ -217,15 +200,10 @@ async function startGame() {
                     units: units
                 });
         },
-        fightLane: async () => {
+        fightEncounter: async () => {
             let units = getLaneData(document.getElementById("lane"));
-            let laneA = { "units": units };
-            let laneB = { "units": units };
-            let log = await apiPostCall("player/fight",
-                {
-                    laneA: laneA,
-                    laneB: laneB
-                });
+            let lane = { "units": units };
+            let log = await apiPostCall("player/room/fight", lane);
             document.getElementById("battle-log").innerText = renderLog(log, laneA, laneB);
         },
         leaderboardFightsRecalc: async () => {
@@ -253,6 +231,20 @@ async function startGame() {
         },
         unit: async message => {
             await loadUnits();
+        },
+        room: message => {
+            let room = message.room;
+            let roomType = roomTypes[room.type];
+            document.getElementById("room-level").innerText = room.level;
+            document.getElementById("room-title").innerText = roomType.title;
+            document.getElementById("room-description").innerText = roomType.description;
+            let encounterNode = document.getElementById("encounter");
+            let laneNode = document.getElementById("encounter-lane");
+            encounterNode.style.display = "none";
+            if (room.type === "combat") {
+                encounterNode.style.display = "block";
+                fillLane(laneNode, arrayToDictionaryById(room.encounter.units), room.encounter.lane.units);
+            }
         }
     });
 
