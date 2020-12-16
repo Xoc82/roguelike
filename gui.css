@@ -58,6 +58,7 @@ body {
 
 #guiDungeon {
     flex-direction: row !important;
+    overflow: hidden;
 }
     #guiDungeon .unitsel {
         flex: 0 0 120px;
