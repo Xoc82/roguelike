@@ -3,7 +3,7 @@
     xhr.open("GET", name);
     xhr.send();
     xhr.onload = () => {
-        if (xhr.status === 200) {
+        if (xhr.status === 200 || xhr.status === 0) {
             let data = JSON.parse(xhr.responseText);
             resolve(data);
         } else {
