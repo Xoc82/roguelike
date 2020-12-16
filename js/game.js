@@ -49,21 +49,24 @@ async function startGame() {
         }
     }
 
-    function createUnitNode(unit, id) {
+    function createUnitNode(unit, options) {
+        if (!options)
+            options = {}
         let unitTemplate = document.getElementById("unit-template").content;
         let type = unitTypes[unit.typeId];
         let stats = getStatesAtLevel(type, unit.level);
-        if (id)
-            unitTemplate.querySelector(".unit").id = id;
-        else
-            unitTemplate.querySelector(".unit").removeAttribute("id");
-        unitTemplate.querySelector(".unit").dataset.id = unit.id;
-        unitTemplate.querySelector(".unit .header").innerText = type.name;
-        unitTemplate.querySelector(".unit .attack").innerText = stats.attack;
-        unitTemplate.querySelector(".unit .hp .numeric").innerText = stats.hp + "/" + stats.hp;
-        unitTemplate.querySelector(".unit .hp .current").style.width = "100%";
-        unitTemplate.querySelector(".unit .level").innerText = unit.level;
-        return document.importNode(unitTemplate, true);
+        let node = document.importNode(unitTemplate, true);
+        if (options.id)
+            node.querySelector(".unit").id = options.id;
+        if (options.draggable)
+            node.querySelector(".unit").draggable = true;
+        node.querySelector(".unit").dataset.id = unit.id;
+        node.querySelector(".unit .header").innerText = type.name;
+        node.querySelector(".unit .attack").innerText = stats.attack;
+        node.querySelector(".unit .hp .numeric").innerText = stats.hp + "/" + stats.hp;
+        node.querySelector(".unit .hp .current").style.width = "100%";
+        node.querySelector(".unit .level").innerText = unit.level;
+        return node;
     }
 
 
@@ -81,8 +84,11 @@ async function startGame() {
             let unitId = placement.id;
             if (!unitId)
                 continue;
-            let unitNode = createUnitNode(units[unitId], laneNode.id + "-" + unitId);
-            unitNode.querySelector(".unit").draggable = !!placementNode.dataset.dropZone;
+            let unitNode = createUnitNode(units[unitId],
+                {
+                    id: laneNode.id + "-" + unitId,
+                    draggable: !!placementNode.dataset.dropZone
+                });
             placementNode.appendChild(unitNode);
         }
     }
@@ -164,8 +170,10 @@ async function startGame() {
         let parent = document.getElementById("unit-list");
         parent.querySelectorAll('*').forEach(n => n.remove());
         for (let unitId in units) {
-            let unitNode = createUnitNode(units[unitId]);
-            unitNode.querySelector(".unit").draggable = !!parent.dataset.dropZone;
+            let unitNode = createUnitNode(units[unitId],
+                {
+                    draggable: !!parent.dataset.dropZone
+                });
             parent.appendChild(unitNode);
             let button = document.createElement("button");
             button.dataset.action = "levelUp";
@@ -227,7 +235,7 @@ async function startGame() {
         collectRoom: async () => {
             processMessages(await apiPostCall("player/room/collect"));
         },
-        newRun: async() => {
+        newRun: async () => {
             processMessages(await apiPostCall("player/new-run"));
         },
         hardReset: async () => {
@@ -281,7 +289,11 @@ async function startGame() {
             unitCell: (startNode, dragNode, endNode) => {
                 let unitId = dragNode.dataset.id;
                 let unitNodeId = endNode.parentNode.id + "-" + unitId;
-                let unitNode = document.getElementById(unitNodeId) || createUnitNode(units[unitId], unitNodeId);
+                let unitNode = document.getElementById(unitNodeId) || createUnitNode(units[unitId],
+                    {
+                        id: unitNodeId,
+                        draggable: true
+                    });
 
                 if (endNode.children.length > 0) {
                     endNode.children[0].remove();
