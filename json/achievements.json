@@ -1,6 +1,7 @@
 ﻿[
   {
     "id": "first-fight",
+    "name": "First blood", 
     "description":  "You did your first fight!"
   }
 ]

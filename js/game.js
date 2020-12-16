@@ -3,6 +3,8 @@ async function startGame() {
     let unitTypes = arrayToDictionaryById(await loadJson("json/unit-types.json"));
     let roomTypes = arrayToDictionaryById(await loadJson("json/room-types.json"));
     let currencyTypes = arrayToDictionaryById(await loadJson("json/currencies.json"));
+    let achievementDescriptions = arrayToDictionaryById(await loadJson("json/achievements.json"));
+    let skills = arrayToDictionaryById(await loadJson("json/skills.json"));
     let units = {};
     let encounterUnits = {};
     let currencies = {};
@@ -227,6 +229,9 @@ async function startGame() {
         },
         newRun: async() => {
             processMessages(await apiPostCall("player/new-run"));
+        },
+        hardReset: async () => {
+            processMessages(await apiPostCall("player/reset"));
         }
     });
 
@@ -259,7 +264,8 @@ async function startGame() {
             document.getElementById("battle-log").innerText = renderLog(message.log, message.squadA, message.squadB);
         },
         achievement: message => {
-            alert("Achievement unlocked: " + message.achievement);
+            let description = achievementDescriptions[message.achievement];
+            alert("Achievement unlocked: " + description.name + "\n" + description.description);
         }
     });
 
