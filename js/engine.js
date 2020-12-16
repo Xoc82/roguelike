@@ -8,7 +8,6 @@ function registerActions(actions) {
     }
 }
 
-
 function registerDragAndDropHandlers(handlers) {
     for (let name in handlers) {
         if (!allDragAndDropHandlers[name])
@@ -26,7 +25,6 @@ function registerMessageHandlers(handlers) {
         allMessageHandlers[name] = handlers[name];
     }
 }
-
 
 function processMessages(messages) {
     for (let i = 0; i < messages.length; i++) {
@@ -56,6 +54,24 @@ function initEngine() {
                 alert("action missing: " + actionName);
         }
     });
+    document.querySelectorAll('#guiHeadMenu span').forEach(n => n.addEventListener("click", (e) => {
+        let target = e.target.getAttribute('data-mlink');
+        switch (target) {
+            case "Followers":
+            case "Inventory":
+            case "Dungeon":
+                openPanel(target);
+                break;
+            default:
+                break;
+        }
+    }));
+    function openPanel(panelName) {
+        let qa = document.querySelector('.panel.active');
+        if(qa !== null) qa.classList.remove('active');
+        qa = document.querySelector('#guiMainPanel #gui' + panelName);
+        if (qa !== null) qa.classList.add('active');
+    }
 
 
 
@@ -92,7 +108,6 @@ function initEngine() {
             hackyStartNode = startNode;
         }
     });
-
 
     document.addEventListener("dragover", e => {
         let start = hackyStartNode;//findDropZone(e.srcElement);

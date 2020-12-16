@@ -3,84 +3,15 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <script src="/static/api.js"></script>
+    <link rel="stylesheet" href="gui.css">
+    <script src="file:///C:/api.js"></script>
     <script src="js/helpers.js"></script>
     <script src="js/engine.js"></script>
     <script src="js/websocket.js"></script>
     <script src="js/game.js"></script>
-    <style>
-        .unit {
-            background-color: #ffffff;
-            box-shadow: 1px 0 15px rgba(0, 0, 0, 0.5);
-            width: 100px;
-            height: 100px;
-            position: relative;
-            display: inline-block;
-            user-select: none;
-        }
-
-            .unit .header {
-                text-align: center;
-                background-color: #E0E0E0;
-                font-size: 150%;
-            }
-
-            .unit .level {
-                text-align: center;
-                background-color: #f0f0ff;
-                font-size: 150%;
-            }
-
-            .unit .attack {
-                text-align: center;
-                background-color: #fff0f0;
-                font-size: 150%;
-            }
-
-            .unit .hp {
-                height: 22px;
-                width: 100%;
-                background-color: #E08080;
-                position: absolute;
-                bottom: 0;
-                left: 0;
-            }
-
-                .unit .hp .numeric {
-                    position: absolute;
-                    text-align: center;
-                    height: 22px;
-                    width: 100%;
-                    z-index: 2;
-                }
-
-                .unit .hp .current {
-                    position: absolute;
-                    z-index: 1;
-                    height: 22px;
-                    background-color: #80E080;
-                }
-
-        .drag-lane {
-            display: grid;
-            grid-auto-columns: 110px;
-            grid-auto-flow: column;
-        }
-
-        .unit-cell {
-            width: 100px;
-            height: 100px;
-            margin: 5px;
-            border: 1px solid #aaaaaa;
-        }
-    </style>
 </head>
 <body>
     <div id="gui">
-        <h1>Roguelike v0.00003</h1>
-        <div>Account <span id="user-info"></span></div>
-
-        <h2>Sample Hero</h2>
         <template id="unit-template">
             <div class="unit">
                 <div class="header">Hunter</div>
@@ -92,60 +23,76 @@
                 </div>
             </div>
         </template>
-
-
-        <h2>Currencies</h2>
-        <div id="currencies-list"></div>
-        <button data-action="giveMeCC">Give me CC!</button>
-
-        <h2>Lane</h2>
-        <button data-action="saveLane">Save</button>
-        <div id="lane" class="drag-lane">
-            <div data-drop-zone="unitCell" class="unit-cell"></div>
-            <div data-drop-zone="unitCell" class="unit-cell"></div>
-            <div data-drop-zone="unitCell" class="unit-cell"></div>
-            <div data-drop-zone="unitCell" class="unit-cell"></div>
-            <div data-drop-zone="unitCell" class="unit-cell"></div>
-            <div data-drop-zone="unitCell" class="unit-cell"></div>
+        <div id="guiHead">
+            <h2>Roguelike v0.00003</h2>
+            <div>Account <span id="user-info"></span></div>
+            <div id="guiHeadMenu">Menu : <span data-mlink="Followers">Followers</span> - <span data-mlink="Inventory">Inventory</span> - <span data-mlink="Dungeon">Dungeon</span></div>
         </div>
+        <div id="guiMain">
+            <div id="guiMainPanel">
+                <div id="guiInventory" class="panel">
+                    <h2>Currencies</h2>
+                    <div id="currencies-list"></div>
+                    <button data-action="giveMeCC">Give me CC!</button>
+                </div>
+                <div id="guiDungeon" class="panel">
+                    <div id="guiDungeonUnitSel" class="unitsel">
+                        <h2>Units</h2>
+                        <div data-drop-zone="unitList" id="unit-list"></div>
+                    </div>
+                    <div id="guiDungeonRoom">
+                        <h2>Lane</h2>
+                        <button data-action="saveLane">Save</button>
+                        <div id="lane" class="drag-lane">
+                            <div data-drop-zone="unitCell" class="unit-cell"></div>
+                            <div data-drop-zone="unitCell" class="unit-cell"></div>
+                            <div data-drop-zone="unitCell" class="unit-cell"></div>
+                            <div data-drop-zone="unitCell" class="unit-cell"></div>
+                            <div data-drop-zone="unitCell" class="unit-cell"></div>
+                            <div data-drop-zone="unitCell" class="unit-cell"></div>
+                        </div>
+                        <h2><span id="room-level"></span> Room <span id="room-title"></span></h2>
+                        <h2 id="room-description"></h2>
+                        <div id="encounter" style="display: none">
+                            <div id="encounter-lane" class="drag-lane">
+                                <div class="unit-cell"></div>
+                                <div class="unit-cell"></div>
+                                <div class="unit-cell"></div>
+                                <div class="unit-cell"></div>
+                                <div class="unit-cell"></div>
+                                <div class="unit-cell"></div>
+                            </div>
+                            <button data-action="fightEncounter">Fight</button>
 
-        <h2>Units</h2>
-        <div data-drop-zone="unitList" id="unit-list"></div>
-
-        <h2><span id="room-level"></span> Room <span id="room-title"></span></h2>
-        <h2 id="room-description"></h2>
-        <div id="encounter" style="display: none">
-            <div id="encounter-lane" class="drag-lane">
-                <div class="unit-cell"></div>
-                <div class="unit-cell"></div>
-                <div class="unit-cell"></div>
-                <div class="unit-cell"></div>
-                <div class="unit-cell"></div>
-                <div class="unit-cell"></div>
+                        </div>
+                        <button data-action="collectRoom">Collect Reward</button><br />
+                        <button data-action="newRun">Reset Run</button><br />
+                        <h2>Battle log</h2>
+                        <div id="battle-log"></div>
+                    </div>
+                </div>
+                    <div id="guiLeaderboard" class="panel">
+                        <h2>Leaderboard - Number of fights</h2>
+                        <div id="leaderboard-fights">
+                        </div>
+                        <button data-action="leaderboardFightsRecalc">recalc</button>
+                        <button data-action="leaderboardFightsRefresh">refresh</button>
+                        <button data-action="hardReset">!hard reset!</button>
+                        <img src="img\001.png" id="test1">
+                        <img src="https://www.google.de/logos/doodles/2020/december-holidays-days-2-30-6753651837108830.3-law.gif" alt="test2">
+                    </div>
+                </div>
+            <div id="guiChat">
+                <h2>Chat</h2>
+                <div id="chat">
+                </div>
+                <div><input id="chat-message" type="text" name="chat-message" /></div>
+                <button data-action="chatPost">send</button>
+                <button data-action="chatClose">close</button>
             </div>
-            <button data-action="fightEncounter">Fight</button>
-
         </div>
-        <button data-action="collectRoom">Collect Reward</button><br />
-        <button data-action="newRun">Reset Run</button><br />
-        <h2>Battle log</h2>
-        <span id="battle-log"></span>
-
-        <h2>Chat</h2>
-        <div id="chat">
+        <div id="guiBottom">
+            <h2>Bottom zone (?)</h2>
         </div>
-        <div><input id="chat-message" type="text" name="chat-message" /></div>
-        <button data-action="chatPost">send</button>
-        <button data-action="chatClose">close</button>
-
-        <h2>Leaderboard - Number of fights</h2>
-        <div id="leaderboard-fights">
-        </div>
-        <button data-action="leaderboardFightsRecalc">recalc</button>
-        <button data-action="leaderboardFightsRefresh">refresh</button>
-        <button data-action="hardReset">!hard reset!</button>
-        <img src="img\001.png" id="test1">
-        <img src="https://www.google.de/logos/doodles/2020/december-holidays-days-2-30-6753651837108830.3-law.gif" alt="test2">
-    </div>
 </body>
 </html>

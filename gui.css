@@ -1,0 +1,147 @@
+/* Core */
+html {
+    height: 100%;
+}
+
+body {
+    box-sizing: border-box;
+    overflow: hidden;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    margin: 0;
+    font-family: Work Sans, sans-serif;
+    font-size: 16px;
+    border: solid 0px red;
+    border-top: none;
+    border-bottom: none;
+}
+
+#gui {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+#guiHead {
+    height: 120px;
+    flex: 0 1 120px;
+}
+#guiHeadMenu span {
+    cursor: pointer;
+}
+
+#guiBottom {
+    flex: 0 1 40px;
+}
+
+#guiMain {
+    display: flex;
+    flex: 1 1 auto;
+    background-color: #eee;
+    overflow: hidden;
+}
+
+#guiMainPanel {
+    display: flex;
+    width: 80%;
+    background-color: #ddd;
+}
+    #guiMainPanel > .panel {
+        display: none;
+        flex-direction: column;
+    }
+        #guiMainPanel > .panel.active {
+            display: flex;
+        }
+
+#guiDungeon {
+    flex-direction: row !important;
+}
+    #guiDungeon .unitsel {
+        flex: 0 0 120px;
+        border-right: 1px solid #00c;
+        overflow: scroll;
+        padding: 4px;
+    }
+    #guiDungeon #guiDungeonRoom {
+        overflow: hidden;
+        padding: 4px;
+    }
+#battle-log {
+    max-height: 100px;
+    overflow-y: auto;
+}
+
+#guiChat {
+    height: 100%;
+    width: 20%;
+    padding: 4px;
+}
+
+/* Unit */
+.unit {
+    background-color: #ffffff;
+    box-shadow: 1px 0 15px rgba(0, 0, 0, 0.5);
+    width: 100px;
+    height: 100px;
+    position: relative;
+    display: inline-block;
+    user-select: none;
+}
+
+.unit .header {
+    text-align: center;
+    background-color: #E0E0E0;
+    font-size: 150%;
+}
+
+.unit .level {
+    text-align: center;
+    background-color: #f0f0ff;
+    font-size: 150%;
+}
+
+.unit .attack {
+    text-align: center;
+    background-color: #fff0f0;
+    font-size: 150%;
+}
+
+.unit .hp {
+    height: 22px;
+    width: 100%;
+    background-color: #E08080;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
+
+.unit .hp .numeric {
+    position: absolute;
+    text-align: center;
+    height: 22px;
+    width: 100%;
+    z-index: 2;
+}
+
+.unit .hp .current {
+    position: absolute;
+    z-index: 1;
+    height: 22px;
+    background-color: #80E080;
+}
+
+.drag-lane {
+    display: grid;
+    grid-auto-columns: 110px;
+    grid-auto-flow: column;
+}
+
+.unit-cell {
+    width: 100px;
+    height: 100px;
+    margin: 5px;
+    border: 1px solid #aaaaaa;
+}
