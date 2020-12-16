@@ -232,6 +232,13 @@ async function startGame() {
         },
         hardReset: async () => {
             processMessages(await apiPostCall("player/reset"));
+        },
+        login: async () => {
+            let data = {
+                name: document.getElementById("name").value,
+                password: document.getElementById("password").value
+            };
+            await apiPostCall("account/login", data);
         }
     });
 
