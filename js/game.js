@@ -4,7 +4,6 @@ async function startGame() {
     let roomTypes = arrayToDictionaryById(await loadJson("json/room-types.json"));
     let currencyTypes = arrayToDictionaryById(await loadJson("json/currencies.json"));
     let achievementDescriptions = arrayToDictionaryById(await loadJson("json/achievements.json"));
-    let skills = arrayToDictionaryById(await loadJson("json/skills.json"));
     let units = {};
     let encounterUnits = {};
     let currencies = {};

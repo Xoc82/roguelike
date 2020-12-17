@@ -30,18 +30,27 @@
       {
         "id": "attack",
         "element": "water"
+      },
+      {
+        "id": "boost",
+        "triggers": [ "death" ],
+        "target": "self",
+        "charges": 1,
+        "attributes": [ "hp" ]
       }
     ],
     "stats": [
       {
         "level": 1,
         "attack": 46,
-        "hp": 180
+        "hp": 180,
+        "skill1": 10
       },
       {
         "level": 100,
         "attack": 92,
-        "hp": 360
+        "hp": 360,
+        "skill1": 10
       }
     ]
   },
@@ -79,8 +88,8 @@
       },
       {
         "id": "aura",
-        "target": "friendly" ,
-        "attributes": [ "attack" ] 
+        "target": "friendly",
+        "attributes": [ "attack" ]
       }
     ],
     "stats": [
