@@ -1,0 +1,13 @@
+﻿attributes
+	mode: "absolute" | "relative"
+	attributes: "attack" | "armor" | "initiative" | "heal"
+	target: "firstEnemy" | "lastEnemy" | "first" | "last" | "friendly" | "enemy" | "all"
+	element: defined in elements.json
+
+attack
+	element
+	target
+aura
+	mode
+	attribute
+	target
