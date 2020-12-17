@@ -3,6 +3,12 @@
     "id": "hunter",
     "name": "Hunter",
     "element": "wind",
+    "skills": [
+      {
+        "id": "attack",
+        "element": "wind"
+      }
+    ],
     "stats": [
       {
         "level": 1,
@@ -20,16 +26,22 @@
     "id": "carl",
     "name": "Carl",
     "element": "water",
+    "skills": [
+      {
+        "id": "attack",
+        "element": "water"
+      }
+    ],
     "stats": [
       {
         "level": 1,
         "attack": 46,
-        "hp": 115
+        "hp": 180
       },
       {
         "level": 100,
         "attack": 92,
-        "hp": 230
+        "hp": 360
       }
     ]
   },
@@ -37,6 +49,12 @@
     "id": "jet",
     "name": "JET",
     "element": "fire",
+    "skills": [
+      {
+        "id": "attack",
+        "element": "fire"
+      }
+    ],
     "stats": [
       {
         "level": 1,
@@ -54,16 +72,29 @@
     "id": "test",
     "name": "TestMaster",
     "element": "fire",
+    "skills": [
+      {
+        "id": "attack",
+        "element": "fire"
+      },
+      {
+        "id": "aura",
+        "target": "friendly" ,
+        "attributes": [ "attack" ] 
+      }
+    ],
     "stats": [
       {
         "level": 1,
         "attack": 96,
-        "hp": 69
+        "hp": 69,
+        "skill1": 10
       },
       {
         "level": 100,
         "attack": 192,
-        "hp": 138
+        "hp": 138,
+        "skill1": 20
       }
     ]
   }

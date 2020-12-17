@@ -1,11 +1,11 @@
 ﻿[
   {
+    "id": "attack"
+  },
+  {
     "id": "aura"
   },
   {
     "id": "boost"
-  },
-  {
-    "id": "piercing"
   }
 ]
