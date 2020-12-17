@@ -167,19 +167,22 @@ async function startGame() {
     async function loadUnits() {
         units = arrayToDictionaryById(await apiGetCall("player/unit"));
 
-        let parent = document.getElementById("unit-list");
-        parent.querySelectorAll('*').forEach(n => n.remove());
-        for (let unitId in units) {
-            let unitNode = createUnitNode(units[unitId],
-                {
-                    draggable: !!parent.dataset.dropZone
-                });
-            parent.appendChild(unitNode);
-            let button = document.createElement("button");
-            button.dataset.action = "levelUp";
-            button.dataset.actionArgs = unitId;
-            button.innerText = "level up";
-            parent.appendChild(button);
+        let parentNodes = document.querySelectorAll(".unitlist");
+        for (let i = 0; i < parentNodes.length; i++) {
+            let parent = parentNodes[i];
+            parent.querySelectorAll('*').forEach(n => n.remove());
+            for (let unitId in units) {
+                let unitNode = createUnitNode(units[unitId],
+                    {
+                        draggable: !!parent.dataset.dropZone
+                    });
+                parent.appendChild(unitNode);
+                let button = document.createElement("button");
+                button.dataset.action = "levelUp";
+                button.dataset.actionArgs = unitId;
+                button.innerText = "level up";
+                parent.appendChild(button);
+            }
         }
     }
 

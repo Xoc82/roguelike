@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <link rel="stylesheet" href="gui.css">
-    <script src="/static/api.js"></script><!--file:///C:/api.js-->
+    <script src="/static/api.js"></script><!-- file:///C:/api.js  /  /static/api.js -->
     <script src="js/helpers.js"></script>
     <script src="js/engine.js"></script>
     <script src="js/websocket.js"></script>
@@ -24,12 +24,12 @@
             </div>
         </template>
         <div id="guiHead">
-            <h2>Roguelike v0.00003</h2>
+            <h3>Roguelike v0.00003</h3>
             <div>
                 Account <span id="user-info"></span> - Name <input id="name" type="text" name="name" /> - Password <input id="password" type="password" name="password" />
                 <button data-action="login">Login</button>
             </div>
-            <div id="guiHeadMenu">Menu : <span data-mlink="Followers">Followers</span> - <span data-mlink="Inventory">Inventory</span> - <span data-mlink="Dungeon">Dungeon</span></div>
+            <div id="guiHeadMenu">Menu : <span data-mlink="Followers">Followers</span> - <span data-mlink="Inventory">Inventory</span> - <span data-mlink="Dungeon">Dungeon</span> - <span data-mlink="Leaderboard">Leaderboard</span></div>
         </div>
         <div id="guiMain">
             <div id="guiMainPanel">
@@ -40,22 +40,12 @@
                 </div>
                 <div id="guiDungeon" class="panel">
                     <div id="guiDungeonUnitSel" class="unitsel">
-                        <h2>Units</h2>
-                        <div data-drop-zone="unitList" id="unit-list"></div>
+                        <h3>Units</h3>
+                        <div data-drop-zone="unitList" class="unitlist"></div> <!--id="unit-list"-->
                     </div>
                     <div id="guiDungeonRoom">
-                        <h2>Lane</h2>
-                        <button data-action="saveLane">Save</button>
-                        <div id="lane" class="drag-lane">
-                            <div data-drop-zone="unitCell" class="unit-cell"></div>
-                            <div data-drop-zone="unitCell" class="unit-cell"></div>
-                            <div data-drop-zone="unitCell" class="unit-cell"></div>
-                            <div data-drop-zone="unitCell" class="unit-cell"></div>
-                            <div data-drop-zone="unitCell" class="unit-cell"></div>
-                            <div data-drop-zone="unitCell" class="unit-cell"></div>
-                        </div>
-                        <h2><span id="room-level"></span> Room <span id="room-title"></span></h2>
-                        <h2 id="room-description"></h2>
+                        <h3>Level <span id="room-level"></span> Room <span id="room-title"></span></h3>
+                        <h3 id="room-description"></h3>
                         <div id="encounter" style="display: none">
                             <div id="encounter-lane" class="drag-lane">
                                 <div class="unit-cell"></div>
@@ -70,32 +60,46 @@
                         </div>
                         <button data-action="collectRoom">Collect Reward</button><br />
                         <button data-action="newRun">Reset Run</button><br />
-                        <h2>Battle log</h2>
+                        <h3>Your squad</h3>
+                        <button data-action="saveLane">Save (this should be auto soon)</button>
+                        <div id="lane" class="drag-lane">
+                            <div data-drop-zone="unitCell" class="unit-cell"></div>
+                            <div data-drop-zone="unitCell" class="unit-cell"></div>
+                            <div data-drop-zone="unitCell" class="unit-cell"></div>
+                            <div data-drop-zone="unitCell" class="unit-cell"></div>
+                            <div data-drop-zone="unitCell" class="unit-cell"></div>
+                            <div data-drop-zone="unitCell" class="unit-cell"></div>
+                        </div>
+                        <h3>Battle log</h3>
                         <div id="battle-log"></div>
                     </div>
                 </div>
-                    <div id="guiLeaderboard" class="panel">
-                        <h2>Leaderboard - Number of fights</h2>
-                        <div id="leaderboard-fights">
-                        </div>
-                        <button data-action="leaderboardFightsRecalc">recalc</button>
-                        <button data-action="leaderboardFightsRefresh">refresh</button>
-                        <button data-action="hardReset">!hard reset!</button>
-                        <img src="img\001.png" id="test1">
-                        <img src="https://www.google.de/logos/doodles/2020/december-holidays-days-2-30-6753651837108830.3-law.gif" alt="test2">
+                <div id="guiLeaderboard" class="panel">
+                    <h2>Leaderboard - Number of fights</h2>
+                    <div id="leaderboard-fights">
                     </div>
+                    <button data-action="leaderboardFightsRecalc">recalc</button>
+                    <button data-action="leaderboardFightsRefresh">refresh</button>
+                    <button data-action="hardReset">!hard reset!</button>
+                    <img src="img\001.png" id="test1">
+                    <img src="https://www.google.de/logos/doodles/2020/december-holidays-days-2-30-6753651837108830.3-law.gif" alt="test2">
+                </div>
                 </div>
             <div id="guiChat">
-                <h2>Chat</h2>
-                <div id="chat">
+                <div id="chatToggle">
                 </div>
-                <div><input id="chat-message" type="text" name="chat-message" /></div>
-                <button data-action="chatPost">send</button>
-                <button data-action="chatClose">close</button>
+                <div id="chatContent">
+                    <h3>Chat</h3>
+                    <div id="chat">
+                    </div>
+                    <div><input id="chat-message" type="text" name="chat-message" /></div>
+                    <button data-action="chatPost">send</button>
+                    <button data-action="chatClose">close</button>
+                </div>
             </div>
         </div>
         <div id="guiBottom">
-            <h2>Bottom zone (?)</h2>
+            <h3>Bottom zone (?)</h3>
         </div>
 </body>
 </html>

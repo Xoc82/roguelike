@@ -31,6 +31,9 @@ body {
 #guiHeadMenu span {
     cursor: pointer;
 }
+#guiHeadMenu input {
+    width: 100px;
+}
 
 #guiBottom {
     flex: 0 1 40px;
@@ -45,7 +48,7 @@ body {
 
 #guiMainPanel {
     display: flex;
-    width: 80%;
+    flex: 1 1 auto;
     background-color: #ddd;
 }
     #guiMainPanel > .panel {
@@ -61,32 +64,56 @@ body {
     overflow: hidden;
 }
     #guiDungeon .unitsel {
-        flex: 0 0 120px;
+        flex: 0 0 110px;
         border-right: 1px solid #00c;
-        overflow: scroll;
+        overflow-y: auto;
         padding: 4px;
+        text-align: center;
     }
+        #guiDungeon .unitsel .unitlist {
+            padding: 0 5px;
+        }
     #guiDungeon #guiDungeonRoom {
         overflow: hidden;
         padding: 4px;
+        flex: 1 0 auto;
     }
+
 #battle-log {
     max-height: 100px;
     overflow-y: auto;
 }
 
 #guiChat {
+    display: flex;
     height: 100%;
-    width: 20%;
+    flex: 1 1 20%;
+    transition: all 0.5s ease-in-out;
+}
+    #guiChat.hidden {
+        flex: 0.0001 0 5px;
+    }
+        #guiChat.hidden #chatContent {
+            flex-grow: 0.000001;
+            width: 0;
+            padding: 0;
+        }
+#chatToggle {
+    flex: 0 0 5px;
+    background-color: #bbb;
+}
+#chatContent {
+    width: 200px;
     padding: 4px;
+    transition: all 0.5s ease-in-out;
 }
 
 /* Unit */
 .unit {
     background-color: #ffffff;
     box-shadow: 1px 0 15px rgba(0, 0, 0, 0.5);
-    width: 100px;
-    height: 100px;
+    width: 80px;
+    height: 80px;
     position: relative;
     display: inline-block;
     user-select: none;
@@ -95,19 +122,19 @@ body {
 .unit .header {
     text-align: center;
     background-color: #E0E0E0;
-    font-size: 150%;
+    font-size: 100%;
 }
 
 .unit .level {
     text-align: center;
     background-color: #f0f0ff;
-    font-size: 150%;
+    font-size: 100%;
 }
 
 .unit .attack {
     text-align: center;
     background-color: #fff0f0;
-    font-size: 150%;
+    font-size: 100%;
 }
 
 .unit .hp {
@@ -136,13 +163,13 @@ body {
 
 .drag-lane {
     display: grid;
-    grid-auto-columns: 110px;
+    grid-auto-columns: 90px;
     grid-auto-flow: column;
 }
 
 .unit-cell {
-    width: 100px;
-    height: 100px;
+    width: 80px;
+    height: 80px;
     margin: 5px;
     border: 1px solid #aaaaaa;
 }

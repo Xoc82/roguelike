@@ -60,6 +60,7 @@ function initEngine() {
             case "Followers":
             case "Inventory":
             case "Dungeon":
+            case "Leaderboard":
                 openPanel(target);
                 break;
             default:
@@ -72,6 +73,10 @@ function initEngine() {
         qa = document.querySelector('#guiMainPanel #gui' + panelName);
         if (qa !== null) qa.classList.add('active');
     }
+    document.getElementById("chatToggle").addEventListener("click", (e) => {
+        let gc = document.querySelector('#guiChat');
+        gc.classList.toggle('hidden');
+    });
 
 
 
