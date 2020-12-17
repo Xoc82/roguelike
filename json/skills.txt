@@ -9,5 +9,5 @@ attack
 	target
 aura
 	mode
-	attribute
+	attributes
 	target
