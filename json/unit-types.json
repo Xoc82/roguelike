@@ -94,7 +94,8 @@
     "skills": [
       {
         "id": "attack",
-        "element": "fire"
+        "element": "fire",
+        "piercing": [50, 25] 
       }
     ],
     "stats": [
