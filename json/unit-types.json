@@ -1,5 +1,38 @@
 ﻿[
   {
+    "id": "geum",
+    "name": "Geum",
+    "element": "earth",
+    "skills": [
+      {
+        "id": "attack",
+        "element": "earth"
+      },
+      {
+        "id": "boost",
+        "triggers": [ "attack" ],
+        "mode": "relative",
+        "charges": 10,
+        "targets": [ "self" ],
+        "attributes": [ "attack", "hp" ]
+      }
+    ],
+    "stats": [
+      {
+        "level": 1,
+        "attack": 64,
+        "hp": 96,
+        "skill1": 100
+      },
+      {
+        "level": 100,
+        "attack": 320,
+        "hp": 580,
+        "skill1": 100
+      }
+    ]
+  },
+  {
     "id": "hunter",
     "name": "Hunter",
     "element": "wind",
@@ -34,7 +67,7 @@
       {
         "id": "boost",
         "triggers": [ "death" ],
-        "target": "self",
+        "targets": [ "self" ],
         "charges": 1,
         "attributes": [ "hp" ]
       }
@@ -88,7 +121,7 @@
       },
       {
         "id": "aura",
-        "target": "friendly",
+        "targets": [ "friendly" ],
         "attributes": [ "attack" ]
       }
     ],
