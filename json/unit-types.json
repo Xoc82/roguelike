@@ -1,7 +1,7 @@
 ﻿[
   {
     "id": "tank-earth",
-    "name": "Standard Earth Tank",
+    "name": "Earth Tank",
     "element": "earth",
     "skills": [
       {
@@ -22,6 +22,7 @@
         "attack": 20,
         "armor": 10,
         "hp": 76,
+        "initiative": -1,
         "skill1": 15
       },
       {
@@ -29,13 +30,14 @@
         "attack": 80,
         "armor": 20,
         "hp": 304,
+        "initiative": -1,
         "skill1": 60
       }
     ]
   },
   {
     "id": "tank-water",
-    "name": "Standard Water Tank",
+    "name": "Water Tank",
     "element": "water",
     "skills": [
       {
@@ -69,12 +71,12 @@
   },
   {
     "id": "tank-wind",
-    "name": "Standard Wind Tank",
-    "element": "water",
+    "name": "Wind Tank",
+    "element": "wind",
     "skills": [
       {
         "id": "attack",
-        "element": "water"
+        "element": "wind"
       }
     ],
     "stats": [
@@ -96,7 +98,7 @@
   },
   {
     "id": "tank-fire",
-    "name": "Standard Fire Tank",
+    "name": "Fire Tank",
     "element": "fire",
     "skills": [
       {
@@ -129,7 +131,7 @@
   },
   {
     "id": "mage-fire",
-    "name": "Standard Mage Fire",
+    "name": "Mage Fire",
     "element": "fire",
     "skills": [
       {
@@ -156,7 +158,7 @@
   },
   {
     "id": "mage-earth",
-    "name": "Standard Mage Earth",
+    "name": "Mage Earth",
     "element": "earth",
     "skills": [
       {
@@ -175,23 +177,85 @@
         "level": 1,
         "attack": 10,
         "armor": 0,
-        "hp": 35,
-        "skill1": 10,
-        "initiative": -1 
+        "hp": 34,
+        "initiative": -1,
+        "skill1": 10
       },
       {
         "level": 16,
         "attack": 40,
         "armor": 0,
-        "hp": 160,
-        "skill1": 10,
-        "initiative": -1
+        "hp": 136,
+        "initiative": -1,
+        "skill1": 10
+      }
+    ]
+  },
+  {
+    "id": "dragon-wind",
+    "name": "Dragon Wind",
+    "element": "wind",
+    "skills": [
+      {
+        "id": "attack",
+        "element": "wind",
+        "triggers": [ "battleStart", "turnEnd" ],
+        "targets": [ "inFront", "enemy" ]
+      }
+    ],
+    "stats": [
+      {
+        "level": 1,
+        "attack": 7,
+        "armor": 0,
+        "hp": 65
+      },
+      {
+        "level": 16,
+        "attack": 28,
+        "armor": 0,
+        "hp": 260
+      }
+    ]
+  },
+  {
+    "id": "mage-water",
+    "name": "Mage Water",
+    "element": "water",
+    "skills": [
+      {
+        "id": "attack",
+        "element": "water"
+      },
+      {
+        "id": "aura",
+        "attributes": [ "attack" ],
+        "mode": "relative",
+        "targets": [ "enemy" ]
+      }
+    ],
+    "stats": [
+      {
+        "level": 1,
+        "attack": 12,
+        "armor": 0,
+        "hp": 41,
+        "initiative": -1,
+        "skill1": -10
+      },
+      {
+        "level": 16,
+        "attack": 48,
+        "armor": 0,
+        "hp": 164,
+        "initiative": -1,
+        "skill1": -10
       }
     ]
   },
   {
     "id": "healer-wind",
-    "name": "Standard Healer Wind",
+    "name": "Healer Wind",
     "element": "wind",
     "skills": [
       {
@@ -225,7 +289,7 @@
   },
   {
     "id": "healer-water",
-    "name": "Standard Healer Water",
+    "name": "Healer Water",
     "element": "water",
     "skills": [
       {
@@ -243,21 +307,21 @@
         "level": 1,
         "attack": 10,
         "armor": 0,
-        "hp": 60,
-        "skill1": 10
+        "hp": 61,
+        "skill1": 15
       },
       {
         "level": 16,
         "attack": 40,
         "armor": 0,
-        "hp": 240,
-        "skill1": 40
+        "hp": 244,
+        "skill1": 60
       }
     ]
   },
   {
     "id": "healer-fire",
-    "name": "Standard Healer Fire",
+    "name": "Healer Fire",
     "element": "fire",
     "skills": [
       {
@@ -277,20 +341,20 @@
         "attack": 26,
         "armor": 0,
         "hp": 60,
-        "skill1": 2
+        "skill1": 3
       },
       {
         "level": 16,
         "attack": 64,
         "armor": 0,
         "hp": 240,
-        "skill1": 8
+        "skill1": 12
       }
     ]
   },
   {
     "id": "healer-earth",
-    "name": "Standard Healer Earth",
+    "name": "Healer Earth",
     "element": "earth",
     "skills": [
       {
@@ -308,22 +372,24 @@
       {
         "level": 1,
         "attack": 10,
-        "armor": 0,
-        "hp": 60,
+        "armor": 5,
+        "hp": 62,
+        "initiative": 1,
         "skill1": 3
       },
       {
         "level": 16,
         "attack": 40,
-        "armor": 0,
-        "hp": 240,
+        "armor": 20,
+        "hp": 248,
+        "initiative": 1,
         "skill1": 12
       }
     ]
   },
   {
     "id": "damage-dealer-fire",
-    "name": "Standard Damage Dealer Fire",
+    "name": "Damage Dealer Fire",
     "element": "fire",
     "skills": [
       {
@@ -343,6 +409,7 @@
         "attack": 8,
         "armor": 0,
         "hp": 60,
+        "initiative": 1,
         "skill1": 2
       },
       {
@@ -350,13 +417,14 @@
         "attack": 32,
         "armor": 0,
         "hp": 240,
+        "initiative": 1,
         "skill1": 8
       }
     ]
   },
   {
     "id": "damage-dealer-water",
-    "name": "Standard Damage Dealer Water",
+    "name": "Damage Dealer Water",
     "element": "water",
     "skills": [
       {
@@ -370,23 +438,21 @@
         "level": 1,
         "attack": 30,
         "armor": 0,
-        "hp": 60,
-        "skill1": 2,
+        "hp": 69,
         "initiative": 1
       },
       {
         "level": 16,
         "attack": 120,
         "armor": 0,
-        "hp": 240,
-        "skill1": 8,
+        "hp": 274,
         "initiative": 1
       }
     ]
   },
   {
     "id": "damage-dealer-earth",
-    "name": "Standard Damage Dealer Earth",
+    "name": "Damage Dealer Earth",
     "element": "earth",
     "skills": [
       {
@@ -405,21 +471,21 @@
         "level": 1,
         "attack": 20,
         "armor": 0,
-        "hp": 60,
+        "hp": 57,
         "skill1": -2
       },
       {
         "level": 16,
         "attack": 80,
         "armor": 0,
-        "hp": 240,
+        "hp": 228,
         "skill1": -8
       }
     ]
   },
   {
     "id": "damage-dealer-wind",
-    "name": "Standard Damage Dealer Wind",
+    "name": "Damage Dealer Wind",
     "element": "wind",
     "skills": [
       {

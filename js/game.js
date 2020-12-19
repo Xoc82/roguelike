@@ -117,6 +117,8 @@ async function startGame() {
                 result += getUnitFromId(event.source) + " ";
             if (event.target)
                 result += getUnitFromId(event.target) + " ";
+            if (event.attribute)
+                result += event.attribute + " ";
             if (event.value)
                 result += event.value + " ";
             result += "\n";
