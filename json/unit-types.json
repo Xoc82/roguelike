@@ -1,7 +1,7 @@
 ﻿[
   {
-    "id": "geum",
-    "name": "Geum",
+    "id": "tank-earth",
+    "name": "Standard Earth Tank",
     "element": "earth",
     "skills": [
       {
@@ -10,54 +10,32 @@
       },
       {
         "id": "boost",
-        "triggers": [ "attack" ],
-        "mode": "relative",
-        "charges": 10,
-        "targets": [ "self" ],
-        "attributes": [ "attack", "hp" ]
+        "triggers": [ "battleStart" ],
+        "mode": "absolute",
+        "targets": [ "friendly" ],
+        "attributes": [ "hp" ]
       }
     ],
     "stats": [
       {
         "level": 1,
-        "attack": 64,
-        "hp": 96,
-        "skill1": 100
+        "attack": 20,
+        "armor": 10,
+        "hp": 76,
+        "skill1": 15
       },
       {
-        "level": 100,
-        "attack": 320,
-        "hp": 580,
-        "skill1": 100
+        "level": 16,
+        "attack": 80,
+        "armor": 20,
+        "hp": 304,
+        "skill1": 60
       }
     ]
   },
   {
-    "id": "hunter",
-    "name": "Hunter",
-    "element": "wind",
-    "skills": [
-      {
-        "id": "attack",
-        "element": "wind"
-      }
-    ],
-    "stats": [
-      {
-        "level": 1,
-        "attack": 64,
-        "hp": 96
-      },
-      {
-        "level": 100,
-        "attack": 320,
-        "hp": 580
-      }
-    ]
-  },
-  {
-    "id": "carl",
-    "name": "Carl",
+    "id": "tank-water",
+    "name": "Standard Water Tank",
     "element": "water",
     "skills": [
       {
@@ -66,54 +44,59 @@
       },
       {
         "id": "boost",
-        "triggers": [ "death" ],
-        "targets": [ "self" ],
-        "charges": 1,
-        "attributes": [ "hp" ]
+        "triggers": [ "battleStart" ],
+        "mode": "absolute",
+        "targets": [ "friendly" ],
+        "attributes": [ "armor" ]
       }
     ],
     "stats": [
       {
         "level": 1,
-        "attack": 46,
-        "hp": 180,
-        "skill1": 10
+        "attack": 18,
+        "armor": 10,
+        "hp": 70,
+        "skill1": 1
       },
       {
-        "level": 100,
-        "attack": 92,
-        "hp": 360,
-        "skill1": 10
+        "level": 16,
+        "attack": 72,
+        "armor": 20,
+        "hp": 280,
+        "skill1": 4
       }
     ]
   },
   {
-    "id": "jet",
-    "name": "JET",
-    "element": "fire",
+    "id": "tank-wind",
+    "name": "Standard Wind Tank",
+    "element": "water",
     "skills": [
       {
         "id": "attack",
-        "element": "fire",
-        "piercing": [50, 25] 
+        "element": "water"
       }
     ],
     "stats": [
       {
         "level": 1,
-        "attack": 64,
-        "hp": 94
+        "attack": 20,
+        "armor": 10,
+        "hp": 90,
+        "heal": 20
       },
       {
-        "level": 100,
-        "attack": 92,
-        "hp": 230
+        "level": 16,
+        "attack": 80,
+        "armor": 40,
+        "hp": 360,
+        "heal": 80
       }
     ]
   },
   {
-    "id": "test",
-    "name": "TestMaster",
+    "id": "tank-fire",
+    "name": "Standard Fire Tank",
     "element": "fire",
     "skills": [
       {
@@ -121,23 +104,348 @@
         "element": "fire"
       },
       {
+        "id": "boost",
+        "targets": [ "self" ],
+        "mode": "relative",
+        "attributes": [ "hp" ]
+      }
+    ],
+    "stats": [
+      {
+        "level": 1,
+        "attack": 20,
+        "armor": 10,
+        "hp": 80,
+        "heal": 20
+      },
+      {
+        "level": 16,
+        "attack": 80,
+        "armor": 20,
+        "hp": 320,
+        "heal": 20
+      }
+    ]
+  },
+  {
+    "id": "mage-fire",
+    "name": "Standard Mage Fire",
+    "element": "fire",
+    "skills": [
+      {
+        "id": "attack",
+        "targets": [ "firstEnemy" ],
+        "element": "fire-magic",
+        "triggers": [ "turnEnd" ]
+      }
+    ],
+    "stats": [
+      {
+        "level": 1,
+        "attack": 10,
+        "armor": 0,
+        "hp": 80
+      },
+      {
+        "level": 16,
+        "attack": 40,
+        "armor": 0,
+        "hp": 320
+      }
+    ]
+  },
+  {
+    "id": "mage-earth",
+    "name": "Standard Mage Earth",
+    "element": "earth",
+    "skills": [
+      {
+        "id": "attack",
+        "element": "earth"
+      },
+      {
         "id": "aura",
         "targets": [ "friendly" ],
+        "mode": "relative",
         "attributes": [ "attack" ]
       }
     ],
     "stats": [
       {
         "level": 1,
-        "attack": 96,
-        "hp": 69,
+        "attack": 10,
+        "armor": 0,
+        "hp": 35,
+        "skill1": 10,
+        "initiative": -1 
+      },
+      {
+        "level": 16,
+        "attack": 40,
+        "armor": 0,
+        "hp": 160,
+        "skill1": 10,
+        "initiative": -1
+      }
+    ]
+  },
+  {
+    "id": "healer-wind",
+    "name": "Standard Healer Wind",
+    "element": "wind",
+    "skills": [
+      {
+        "id": "attack",
+        "element": "wind"
+      },
+      {
+        "id": "aura",
+        "attributes": [ "heal" ],
+        "targets": [ "friendly" ]
+      }
+    ],
+    "stats": [
+      {
+        "level": 1,
+        "attack": 16,
+        "armor": 0,
+        "hp": 65,
+        "skill1": 4,
+        "initiative": 1
+      },
+      {
+        "level": 16,
+        "attack": 64,
+        "armor": 0,
+        "hp": 260,
+        "skill1": 16,
+        "initiative": 1
+      }
+    ]
+  },
+  {
+    "id": "healer-water",
+    "name": "Standard Healer Water",
+    "element": "water",
+    "skills": [
+      {
+        "id": "attack",
+        "element": "water"
+      },
+      {
+        "id": "aura",
+        "attributes": [ "heal" ],
+        "targets": [ "first" ]
+      }
+    ],
+    "stats": [
+      {
+        "level": 1,
+        "attack": 10,
+        "armor": 0,
+        "hp": 60,
         "skill1": 10
       },
       {
-        "level": 100,
-        "attack": 192,
-        "hp": 138,
-        "skill1": 20
+        "level": 16,
+        "attack": 40,
+        "armor": 0,
+        "hp": 240,
+        "skill1": 40
+      }
+    ]
+  },
+  {
+    "id": "healer-fire",
+    "name": "Standard Healer Fire",
+    "element": "fire",
+    "skills": [
+      {
+        "id": "attack",
+        "element": "fire"
+      },
+      {
+        "id": "boost",
+        "attributes": [ "heal" ],
+        "triggers": [ "battleStart" ],
+        "targets": [ "friendly" ]
+      }
+    ],
+    "stats": [
+      {
+        "level": 1,
+        "attack": 26,
+        "armor": 0,
+        "hp": 60,
+        "skill1": 2
+      },
+      {
+        "level": 16,
+        "attack": 64,
+        "armor": 0,
+        "hp": 240,
+        "skill1": 8
+      }
+    ]
+  },
+  {
+    "id": "healer-earth",
+    "name": "Standard Healer Earth",
+    "element": "earth",
+    "skills": [
+      {
+        "id": "attack",
+        "element": "earth"
+      },
+      {
+        "id": "boost",
+        "attributes": [ "heal" ],
+        "triggers": [ "battleStart" ],
+        "targets": [ "friendly" ]
+      }
+    ],
+    "stats": [
+      {
+        "level": 1,
+        "attack": 10,
+        "armor": 0,
+        "hp": 60,
+        "skill1": 3
+      },
+      {
+        "level": 16,
+        "attack": 40,
+        "armor": 0,
+        "hp": 240,
+        "skill1": 12
+      }
+    ]
+  },
+  {
+    "id": "damage-dealer-fire",
+    "name": "Standard Damage Dealer Fire",
+    "element": "fire",
+    "skills": [
+      {
+        "id": "attack",
+        "element": "fire"
+      },
+      {
+        "id": "attack",
+        "element": "fire-magic",
+        "targets": [ "firstEnemy" ],
+        "triggers": [ "turnEnd" ]
+      }
+    ],
+    "stats": [
+      {
+        "level": 1,
+        "attack": 8,
+        "armor": 0,
+        "hp": 60,
+        "skill1": 2
+      },
+      {
+        "level": 16,
+        "attack": 32,
+        "armor": 0,
+        "hp": 240,
+        "skill1": 8
+      }
+    ]
+  },
+  {
+    "id": "damage-dealer-water",
+    "name": "Standard Damage Dealer Water",
+    "element": "water",
+    "skills": [
+      {
+        "id": "attack",
+        "element": "water",
+        "piercing": [ 100 ]
+      }
+    ],
+    "stats": [
+      {
+        "level": 1,
+        "attack": 30,
+        "armor": 0,
+        "hp": 60,
+        "skill1": 2,
+        "initiative": 1
+      },
+      {
+        "level": 16,
+        "attack": 120,
+        "armor": 0,
+        "hp": 240,
+        "skill1": 8,
+        "initiative": 1
+      }
+    ]
+  },
+  {
+    "id": "damage-dealer-earth",
+    "name": "Standard Damage Dealer Earth",
+    "element": "earth",
+    "skills": [
+      {
+        "id": "attack",
+        "element": "earth"
+      },
+      {
+        "id": "boost",
+        "targets": [ "enemy" ],
+        "attributes": [ "heal" ],
+        "triggers": [ "battleStart" ]
+      }
+    ],
+    "stats": [
+      {
+        "level": 1,
+        "attack": 20,
+        "armor": 0,
+        "hp": 60,
+        "skill1": -2
+      },
+      {
+        "level": 16,
+        "attack": 80,
+        "armor": 0,
+        "hp": 240,
+        "skill1": -8
+      }
+    ]
+  },
+  {
+    "id": "damage-dealer-wind",
+    "name": "Standard Damage Dealer Wind",
+    "element": "wind",
+    "skills": [
+      {
+        "id": "attack",
+        "element": "wind"
+      },
+      {
+        "id": "attack",
+        "element": "wind",
+        "triggers": [ "turnEnd" ]
+      }
+    ],
+    "stats": [
+      {
+        "level": 1,
+        "attack": 15,
+        "armor": 0,
+        "hp": 60,
+        "skill1": 2
+      },
+      {
+        "level": 16,
+        "attack": 60,
+        "armor": 0,
+        "hp": 240,
+        "skill1": 8
       }
     ]
   }

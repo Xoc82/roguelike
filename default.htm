@@ -14,7 +14,7 @@
     <div id="gui">
         <template id="unit-template">
             <div class="unit">
-                <div class="header">Hunter</div>
+                <div class="header">Hunter</div>g
                 <div class="level">20</div>
                 <div class="attack">Atk: <span class="value">20</span></div>
                 <div class="hp">
@@ -29,7 +29,7 @@
                 Account <span id="user-info"></span> - Name <input id="name" type="text" name="name" /> - Password <input id="password" type="password" name="password" />
                 <button data-action="login">Login</button>
             </div>
-            <div id="guiHeadMenu">Menu : <span data-mlink="Followers">Followers</span> - <span data-mlink="Inventory">Inventory</span> - <span data-mlink="Dungeon">Dungeon</span> - <span data-mlink="Leaderboard">Leaderboard</span></div>
+            <div id="guiHeadMenu">Menu : <span data-mlink="Followers">Followers</span> - <span data-mlink="Inventory">Inventory</span> - <span data-mlink="Dungeon">Dungeon</span> - <span data-mlink="Leaderboard">Leaderboard</span> - <a href="admin.htm">Admin Area</a></div>
         </div>
         <div id="guiMain">
             <div id="guiMainPanel">
@@ -86,7 +86,7 @@
                 </div>
                 </div>
             <div id="guiChat">
-                <div id="chatToggle">
+                <div id="chatToggle" data-action="chatToggle">
                 </div>
                 <div id="chatContent">
                     <h3>Chat</h3>

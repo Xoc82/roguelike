@@ -83,7 +83,10 @@ async function startGame() {
             let unitId = placement.id;
             if (!unitId)
                 continue;
-            let unitNode = createUnitNode(units[unitId],
+            let unit = units[unitId];
+            if (!unit)
+                continue;
+            let unitNode = createUnitNode(unit,
                 {
                     id: laneNode.id + "-" + unitId,
                     draggable: !!placementNode.dataset.dropZone
@@ -249,6 +252,10 @@ async function startGame() {
                 password: document.getElementById("password").value
             };
             await apiPostCall("account/login", data);
+        },
+        chatToggle: () => {
+            let gc = document.querySelector('#guiChat');
+            gc.classList.toggle('hidden');
         }
     });
 

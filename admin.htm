@@ -1,0 +1,48 @@
+﻿<!doctype html>
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="gui.css">
+    <script src="/static/api.js"></script><!-- file:///C:/api.js  /  /static/api.js -->
+    <script src="js/helpers.js"></script>
+    <script src="js/engine.js"></script>
+    <script src="js/admin.js"></script>
+</head>
+<body>
+    <div id="gui">
+        <template id="unit-template">
+            <div class="unit">
+                <div class="header">Hunter</div>
+                <div class="level">20</div>
+                <div class="attack">Atk: <span class="value">20</span></div>
+                <div class="hp">
+                    <div class="current" style="width: 70%"></div>
+                    <div class="numeric">70/100</div>
+                </div>
+            </div>
+        </template>
+        <div id="guiHead">
+            <h3>Roguelike v0.00003</h3>
+            <div>
+                Account <span id="user-info"></span> - Name <input id="name" type="text" name="name" /> - Password <input id="password" type="password" name="password" />
+                <button data-action="login">Login</button>
+            </div>
+            <div id="guiHeadMenu">Menu : <span data-mlink="Admin">Admin</span> - <a href="default.htm">Game</a></div>
+        </div>
+        <div id="guiMain">
+            <div id="guiMainPanel">
+                <div id="guiAdmin" class="panel active">
+                    <h2>Admin</h2>
+                    <a href="/api/game/balancing" target="_blank">Calc Balancing</a><br />
+                    <a href="/api/game/skills" target="_blank">Skills</a><br />
+                    <button data-action="giveMeCC">Give me CC!</button><br/>
+                </div>
+            </div>
+        </div>
+        <div id="guiBottom">
+            <h3>Bottom zone (?)</h3>
+        </div>
+    </div>
+</body>
+</html>

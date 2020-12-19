@@ -57,6 +57,7 @@ function initEngine() {
     document.querySelectorAll('#guiHeadMenu span').forEach(n => n.addEventListener("click", (e) => {
         let target = e.target.getAttribute('data-mlink');
         switch (target) {
+            case "Admin":
             case "Followers":
             case "Inventory":
             case "Dungeon":
@@ -73,10 +74,7 @@ function initEngine() {
         qa = document.querySelector('#guiMainPanel #gui' + panelName);
         if (qa !== null) qa.classList.add('active');
     }
-    document.getElementById("chatToggle").addEventListener("click", (e) => {
-        let gc = document.querySelector('#guiChat');
-        gc.classList.toggle('hidden');
-    });
+
 
 
 
