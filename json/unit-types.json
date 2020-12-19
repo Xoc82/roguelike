@@ -57,14 +57,14 @@
         "level": 1,
         "attack": 18,
         "armor": 10,
-        "hp": 70,
+        "hp": 84,
         "skill1": 1
       },
       {
         "level": 16,
         "attack": 72,
         "armor": 20,
-        "hp": 280,
+        "hp": 336,
         "skill1": 4
       }
     ]
@@ -109,6 +109,8 @@
         "id": "boost",
         "targets": [ "self" ],
         "mode": "relative",
+        "charges": 1,
+        "triggers": [ "death" ],
         "attributes": [ "hp" ]
       }
     ],
@@ -118,14 +120,14 @@
         "attack": 20,
         "armor": 10,
         "hp": 80,
-        "heal": 20
+        "skill1": 20
       },
       {
         "level": 16,
         "attack": 80,
         "armor": 20,
         "hp": 320,
-        "heal": 20
+        "skill1": 20
       }
     ]
   },
@@ -308,6 +310,7 @@
         "attack": 10,
         "armor": 0,
         "hp": 61,
+        "initiative": -1,
         "skill1": 15
       },
       {
@@ -315,6 +318,7 @@
         "attack": 40,
         "armor": 0,
         "hp": 244,
+        "initiative": -1,
         "skill1": 60
       }
     ]
