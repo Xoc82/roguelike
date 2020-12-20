@@ -33,8 +33,7 @@
         "initiative": -1,
         "skill1": 60
       }
-    ],
-    "img": "7bfg"
+    ]
   },
   {
     "id": "tank-water",
@@ -95,8 +94,7 @@
         "hp": 360,
         "heal": 80
       }
-    ],
-    "img": "7bfg"
+    ]
   },
   {
     "id": "tank-fire",
@@ -193,8 +191,7 @@
         "initiative": -1,
         "skill1": 10
       }
-    ],
-    "img": "7bfg"
+    ]
   },
   {
     "id": "dragon-wind",
@@ -392,8 +389,7 @@
         "initiative": 1,
         "skill1": 12
       }
-    ],
-    "img": "7bfg"
+    ]
   },
   {
     "id": "damage-dealer-fire",
@@ -521,7 +517,6 @@
         "hp": 240,
         "skill1": 8
       }
-    ],
-    "img": "7bfg"
+    ]
   }
 ]
