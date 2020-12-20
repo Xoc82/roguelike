@@ -4,12 +4,6 @@
 <head>
     <meta charset="utf-8">
     <link rel="stylesheet" href="gui.css">
-    <script src="/static/api.js"></script><!-- file:///C:/api.js  /  /static/api.js -->
-    <script src="js/helpers.js"></script>
-    <script src="js/engine.js"></script>
-    <script src="js/websocket.js"></script>
-    <script src="js/texer.js"></script>
-    <script src="js/game.js"></script>
 </head>
 <body>
     <div id="gui">
@@ -86,7 +80,7 @@
                     <img src="img\001.png" id="test1">
                     <img src="https://www.google.de/logos/doodles/2020/december-holidays-days-2-30-6753651837108830.3-law.gif" alt="test2">
                 </div>
-                </div>
+            </div>
             <div id="guiChat">
                 <div id="chatToggle" data-action="chatToggle">
                 </div>
@@ -103,5 +97,15 @@
         <div id="guiBottom">
             <h3>Bottom zone (?)</h3>
         </div>
+        <script>
+            var script = document.createElement('script');
+            script.src = location.hostname == "" || location.hostname === "localhost" || location.hostname === "127.0.0.1" ? "file:///C:/api.js" : "/static/api.js";
+            document.head.appendChild(script);
+        </script>
+        <script src="js/helpers.js"></script>
+        <script src="js/engine.js"></script>
+        <script src="js/websocket.js"></script>
+        <script src="js/texer.js"></script>
+        <script src="js/game.js"></script>
 </body>
 </html>
