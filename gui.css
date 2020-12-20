@@ -119,53 +119,55 @@ body {
     user-select: none;
 }
 
-.unit .header {
-    text-align: center;
-    background-color: #E0E0E0;
-    font-size: 100%;
-}
+    .unit .header {
+        text-align: center;
+        background-color: #E0E0E0;
+        font-size: 80%;
+        white-space: nowrap;
+        overflow: hidden;
+    }
 
-.unit .level {
-    text-align: center;
-    background-color: #f0f0ff;
-    font-size: 100%;
-}
+    .unit .level {
+        text-align: center;
+        background-color: #f0f0ff;
+        font-size: 100%;
+    }
 
-.unit .attack {
-    text-align: center;
-    background-color: #fff0f0;
-    font-size: 100%;
-}
+    .unit .attack {
+        text-align: center;
+        background-color: #fff0f0;
+        font-size: 100%;
+    }
 
-.unit .hp {
-    height: 22px;
-    width: 100%;
-    background-color: #E08080;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-}
+    .unit .hp {
+        height: 22px;
+        width: 100%;
+        background-color: #E08080;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+    }
 
-.unit .hp .numeric {
-    position: absolute;
-    text-align: center;
-    height: 22px;
-    width: 100%;
-    z-index: 2;
-}
+    .unit .hp .numeric {
+        position: absolute;
+        text-align: center;
+        height: 22px;
+        width: 100%;
+        z-index: 2;
+    }
 
-.unit .hp .current {
-    position: absolute;
-    z-index: 1;
-    height: 22px;
-    background-color: #80E080;
-}
+    .unit .hp .current {
+        position: absolute;
+        z-index: 1;
+        height: 22px;
+        background-color: #80E080;
+    }
 
-.drag-lane {
-    display: grid;
-    grid-auto-columns: 90px;
-    grid-auto-flow: column;
-}
+    .drag-lane {
+        display: grid;
+        grid-auto-columns: 90px;
+        grid-auto-flow: column;
+    }
 
 .unit-cell {
     width: 80px;

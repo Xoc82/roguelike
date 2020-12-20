@@ -4,10 +4,11 @@
 <head>
     <meta charset="utf-8">
     <link rel="stylesheet" href="gui.css">
-    <script src="/static/api.js"></script><!-- file:///C:/api.js  /  /static/api.js -->
+    <script src="file:///C:/api.js"></script><!-- file:///C:/api.js  /  /static/api.js -->
     <script src="js/helpers.js"></script>
     <script src="js/engine.js"></script>
     <script src="js/websocket.js"></script>
+    <script src="js/texer.js"></script>
     <script src="js/game.js"></script>
 </head>
 <body>
@@ -70,6 +71,7 @@
                             <div data-drop-zone="unitCell" class="unit-cell"></div>
                             <div data-drop-zone="unitCell" class="unit-cell"></div>
                         </div>
+                        <canvas id="bAnim" width="800" height="500"></canvas>
                         <h3>Battle log</h3>
                         <div id="battle-log"></div>
                     </div>
