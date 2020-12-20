@@ -93,12 +93,6 @@
                     <button data-action="chatClose">close</button>
                 </div>
             </div>
-			<widgetbot
-  server="753237681131094137"
-  channel="789210680858378311"
-  width="800"
-  height="600"
-></widgetbot>
         </div>
         <div id="guiBottom">
             <h3>Bottom zone (?)</h3>
@@ -113,6 +107,11 @@
         <script src="js/websocket.js"></script>
         <script src="js/texer.js"></script>
         <script src="js/game.js"></script>
-		<script src="https://cdn.jsdelivr.net/npm/@widgetbot/html-embed"></script>
+		<script src="https://cdn.jsdelivr.net/npm/@widgetbot/crate@3" async defer>
+  new Crate({
+    server: '753237681131094137', // Prototype-Design
+    channel: '789210680858378311' // #on-topic-discussion
+  })
+</script>
 </body>
 </html>
