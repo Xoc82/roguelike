@@ -1,0 +1,15 @@
+﻿negative room attributes:
+	ambrush: enemy attacks first
+	deadly: units die for the run
+	cramped: less places for the player
+
+instances:
+	-infinit difficulty?
+	-hero unlock
+	-themed
+
+boss rooms?
+
+mechanics to unlock:
+	-training heroes
+	-setting up lanes

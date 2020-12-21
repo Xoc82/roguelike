@@ -64,7 +64,7 @@
       {
         "level": 16,
         "attack": 72,
-        "armor": 20,
+        "armor": 40,
         "hp": 336,
         "skill1": 4
       }
@@ -414,19 +414,19 @@
     "stats": [
       {
         "level": 1,
-        "attack": 8,
+        "attack": 12,
         "armor": 0,
         "hp": 60,
         "initiative": 1,
-        "skill1": 3
+        "skill1": 4
       },
       {
         "level": 16,
-        "attack": 32,
+        "attack": 48,
         "armor": 0,
         "hp": 240,
         "initiative": 1,
-        "skill1": 16
+        "skill1": 20
       }
     ]
   },
@@ -612,14 +612,14 @@
       {
         "level": 1,
         "attack": 25,
-        "armor": 0,
+        "armor": 4,
         "hp": 72,
         "skill1": -10
       },
       {
         "level": 16,
         "attack": 100,
-        "armor": 0,
+        "armor": 16,
         "hp": 292,
         "skill1": -40
       }
@@ -659,5 +659,136 @@
       }
     ],
     "img": "7bfg"
+  },
+  {
+    "id": "mage-2-fire",
+    "name": "Mage 2 Fire",
+    "element": "fire",
+    "skills": [
+      {
+        "id": "attack",
+        "targets": [ "lastEnemy" ],
+        "element": "fire-magic",
+        "triggers": [ "turnEnd" ]
+      }
+    ],
+    "stats": [
+      {
+        "level": 1,
+        "attack": 11,
+        "armor": 0,
+        "hp": 80
+      },
+      {
+        "level": 16,
+        "attack": 44,
+        "armor": 0,
+        "hp": 320
+      }
+    ]
+  },
+  {
+    "id": "mage-2-water",
+    "name": "Mage 2 Water",
+    "element": "water",
+    "skills": [
+      {
+        "id": "attack",
+        "element": "water"
+      },
+      {
+        "id": "cast",
+        "targets": [ "enemy" ],
+        "element": "water-magic",
+        "triggers": [ "turnEnd" ]
+      }
+    ],
+    "stats": [
+      {
+        "level": 1,
+        "attack": 9,
+        "armor": 0,
+        "hp": 57,
+        "initiative": -1,
+        "skill1": 4
+      },
+      {
+        "level": 16,
+        "attack": 38,
+        "armor": 0,
+        "hp": 228,
+        "initiative": -1,
+        "skill1": 16
+      }
+    ]
+  },
+  {
+    "id": "mage-2-wind",
+    "name": "Mage 2 Wind",
+    "element": "wind",
+    "skills": [
+      {
+        "id": "attack",
+        "element": "wind"
+      },
+      {
+        "id": "boost",
+        "attributes": [ "hp" ],
+        "mode": "relative"
+      }
+    ],
+    "stats": [
+      {
+        "level": 1,
+        "attack": 9,
+        "armor": 3,
+        "hp": 81,
+        "initiative": 1,
+        "skill1": -30
+      },
+      {
+        "level": 16,
+        "attack": 38,
+        "armor": 12,
+        "hp": 324,
+        "initiative": 1,
+        "skill1": -30
+      }
+    ]
+  },
+  {
+    "id": "mage-2-earth",
+    "name": "Mage 2 Earth",
+    "element": "earth",
+    "skills": [
+      {
+        "id": "attack",
+        "element": "earth-magic",
+        "piercing": [ 50 ]
+      },
+      {
+        "id": "boost",
+        "attributes": [ "heal" ],
+        "targets": [ "firstEnemy", "secondEnemy" ]
+      }
+    ],
+    "stats": [
+      {
+        "level": 1,
+        "attack": 9,
+        "armor": 0,
+        "hp": 81,
+        "initiative": 0,
+        "skill1": -2
+      },
+      {
+        "level": 16,
+        "attack": 38,
+        "armor": 0,
+        "hp": 324,
+        "initiative": 0,
+        "skill1": -8
+      }
+    ]
   }
 ]
