@@ -113,10 +113,8 @@
                 var type = unitTypes[unit.typeId];
                 return type.name;
             }
-            if (event.source)
-                result += getUnitFromId(event.source) + " ";
-            if (event.target)
-                result += getUnitFromId(event.target) + " ";
+            if (event.unit)
+                result += getUnitFromId(event.unit) + " ";
             if (event.attribute)
                 result += event.attribute + " ";
             if (event.value)
