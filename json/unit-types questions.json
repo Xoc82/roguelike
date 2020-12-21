@@ -1,22 +1,22 @@
 ﻿[//use cmd+F to search for comments: "//" to easy find my questions. Answer them with "**" for example, so I can find them easier later.
-  {//do you define units, unit-types or skills here? Will ALL tank-earths have the same boost skill?
+  { //do you define units, unit-types or skills here? Will ALL tank-earths have the same boost skill? => the names are placeholders and should be changed later to proper names ("Lee", "Guy"), so I guess you can think of them as units.
     "id": "tank-earth",
     "name": "Earth Tank",
     "element": "earth",
     "skills": [
       {
-        "id": "attack", //is this skill1?
+        "id": "attack", //is this skill1? => skill0
         "element": "earth"
       },
       {
-        "id": "boost", //is this skill2?
-        "triggers": [ "battleStart" ], //so it will be active even the unit dies?
-        "mode": "absolute", //where is set how much hp get boost?
+        "id": "boost", //is this skill2? => skill1
+        "triggers": [ "battleStart" ], //so it will be active even the unit dies? => all boosts are permanent stats changes
+        "mode": "absolute", //where is set how much hp get boost? => skill1
         "targets": [ "friendly" ],
         "attributes": [ "hp" ]
       }
     ],
-	
+
     "stats": [
       {
         "level": 1,
@@ -24,15 +24,15 @@
         "armor": 10,
         "hp": 76,
         "initiative": -1,
-        "skill1": 15 //is skill1 the "attack" skill? and skill2 "boost"? What does 15 stand for? boost 15 on hp on battlestart?
+        "skill1": 15 //is skill1 the "attack" skill? and skill2 "boost"? What does 15 stand for? boost 15 on hp on battlestart? => the value of skill1 and yes, 15 hp on battlestart
       },
       {
-        "level": 16, //why level 16?
+        "level": 16, //why level 16? => I am currently defining all Hero stats from Level 1 to Level 16, which is currently the max level
         "attack": 80,
         "armor": 20,
         "hp": 304,
         "initiative": -1,
-        "skill1": 60 //what does 16 stand for? boost 60 on hp on battlestart?
+        "skill1": 60 //what does 16 stand for? boost 60 on hp on battlestart? => if the hero is level 16, than the boost is 60
       }
     ],
     "img": "7bfg"
@@ -113,8 +113,8 @@
         "targets": [ "self" ],
         "mode": "relative",
         "charges": 1,
-        "triggers": [ "death" ],//death of which unit? self?
-        "attributes": [ "hp" ]//is it a revive skill then?
+        "triggers": [ "death" ],//death of which unit? self? => self
+        "attributes": [ "hp" ]//is it a revive skill then? => yes
       }
     ],
     "stats": [
@@ -235,7 +235,7 @@
       },
       {
         "id": "aura",
-        "attributes": [ "attack" ], /you might put attribute to the bottom of this?
+        "attributes": [ "attack" ], //you might put attribute to the bottom of this? => what do you mean?
         "mode": "relative",
         "targets": [ "enemy" ]
       }
@@ -270,7 +270,7 @@
       },
       {
         "id": "aura",
-        "attributes": [ "heal" ], //no mode here?
+        "attributes": [ "heal" ], //no mode here? => default is absolute
         "targets": [ "friendly" ]
       }
     ],
@@ -303,7 +303,7 @@
         "element": "water"
       },
       {
-        "id": "aura", //no mode here?
+        "id": "aura", //no mode here? => default is absolute
         "attributes": [ "heal" ],
         "targets": [ "first" ]
       }
