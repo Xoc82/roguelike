@@ -279,7 +279,7 @@
         "attack": 16,
         "armor": 0,
         "hp": 65,
-        "skill1": 5,
+        "skill1": 4,
         "initiative": 1
       },
       {
@@ -287,7 +287,7 @@
         "attack": 64,
         "armor": 0,
         "hp": 260,
-        "skill1": 20,
+        "skill1": 16,
         "initiative": 1
       }
     ]
@@ -426,7 +426,7 @@
         "armor": 0,
         "hp": 240,
         "initiative": 1,
-        "skill1": 12
+        "skill1": 16
       }
     ]
   },
@@ -520,6 +520,142 @@
         "armor": 0,
         "hp": 240,
         "skill1": 8
+      }
+    ],
+    "img": "7bfg"
+  },
+  {
+    "id": "berserker-wind",
+    "name": "Berserker Wind",
+    "element": "wind",
+    "skills": [
+      {
+        "id": "attack",
+        "element": "wind"
+      },
+      {
+        "id": "attack",
+        "element": "wind",
+        "minDamaged": 50
+      }
+    ],
+    "stats": [
+      {
+        "level": 1,
+        "attack": 27,
+        "armor": 0,
+        "hp": 76,
+        "initiative": 1
+
+      },
+      {
+        "level": 16,
+        "attack": 108,
+        "armor": 0,
+        "hp": 304,
+        "initiative": 1
+      }
+    ],
+    "img": "7bfg"
+  },
+  {
+    "id": "berserker-fire",
+    "name": "Berserker Fire",
+    "element": "fire",
+    "skills": [
+      {
+        "id": "attack",
+        "element": "fire"
+      },
+      {
+        "id": "cast",
+        "element": "fire",
+        "triggers": [ "death" ],
+        "targets": [ "enemy" ]
+      }
+    ],
+    "stats": [
+      {
+        "level": 1,
+        "attack": 25,
+        "armor": 0,
+        "hp": 60,
+        "skill1": 20
+      },
+      {
+        "level": 16,
+        "attack": 100,
+        "armor": 0,
+        "hp": 240,
+        "skill1": 80
+      }
+    ],
+    "img": "7bfg"
+  },
+  {
+    "id": "berserker-earth",
+    "name": "Berserker Earth",
+    "element": "earth",
+    "skills": [
+      {
+        "id": "attack",
+        "element": "earth"
+      },
+      {
+        "id": "boost",
+        "triggers": [ "attack" ],
+        "targets": [ "firstEnemy" ],
+        "attributes": [ "armor" ]
+      }
+    ],
+    "stats": [
+      {
+        "level": 1,
+        "attack": 25,
+        "armor": 0,
+        "hp": 72,
+        "skill1": -10
+      },
+      {
+        "level": 16,
+        "attack": 100,
+        "armor": 0,
+        "hp": 292,
+        "skill1": -40
+      }
+    ],
+    "img": "7bfg"
+  },
+  {
+    "id": "berserker-water",
+    "name": "Berserker Water",
+    "element": "water",
+    "skills": [
+      {
+        "id": "attack",
+        "element": "water"
+      },
+      {
+        "id": "attack",
+        "element": "water",
+        "minDamaged": 50
+      }
+    ],
+    "stats": [
+      {
+        "level": 1,
+        "attack": 27,
+        "armor": 4,
+        "hp": 86,
+        "initiative": -1
+
+      },
+      {
+        "level": 16,
+        "attack": 108,
+        "armor": 16,
+        "hp": 344,
+        "initiative": -1
       }
     ],
     "img": "7bfg"
