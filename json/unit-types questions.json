@@ -1,0 +1,664 @@
+﻿[//use cmd+F to search for comments: "//" to easy find my questions. Answer them with "**" for example, so I can find them easier later.
+  {//do you define units, unit-types or skills here? Will ALL tank-earths have the same boost skill?
+    "id": "tank-earth",
+    "name": "Earth Tank",
+    "element": "earth",
+    "skills": [
+      {
+        "id": "attack", //is this skill1?
+        "element": "earth"
+      },
+      {
+        "id": "boost", //is this skill2?
+        "triggers": [ "battleStart" ], //so it will be active even the unit dies?
+        "mode": "absolute", //where is set how much hp get boost?
+        "targets": [ "friendly" ],
+        "attributes": [ "hp" ]
+      }
+    ],
+	
+    "stats": [
+      {
+        "level": 1,
+        "attack": 20,
+        "armor": 10,
+        "hp": 76,
+        "initiative": -1,
+        "skill1": 15 //is skill1 the "attack" skill? and skill2 "boost"? What does 15 stand for? boost 15 on hp on battlestart?
+      },
+      {
+        "level": 16, //why level 16?
+        "attack": 80,
+        "armor": 20,
+        "hp": 304,
+        "initiative": -1,
+        "skill1": 60 //what does 16 stand for? boost 60 on hp on battlestart?
+      }
+    ],
+    "img": "7bfg"
+  },
+  {
+    "id": "tank-water",
+    "name": "Water Tank",
+    "element": "water",
+    "skills": [
+      {
+        "id": "attack",
+        "element": "water"
+      },
+      {
+        "id": "boost",
+        "triggers": [ "battleStart" ],
+        "mode": "absolute",
+        "targets": [ "friendly" ],
+        "attributes": [ "armor" ]
+      }
+    ],
+    "stats": [
+      {
+        "level": 1,
+        "attack": 18,
+        "armor": 10,
+        "hp": 84,
+        "skill1": 1
+      },
+      {
+        "level": 16,
+        "attack": 72,
+        "armor": 20,
+        "hp": 336,
+        "skill1": 4
+      }
+    ]
+  },
+  {
+    "id": "tank-wind",
+    "name": "Wind Tank",
+    "element": "wind",
+    "skills": [
+      {
+        "id": "attack",
+        "element": "wind"
+      }
+    ],
+    "stats": [
+      {
+        "level": 1,
+        "attack": 20,
+        "armor": 10,
+        "hp": 90,
+        "heal": 20
+      },
+      {
+        "level": 16,
+        "attack": 80,
+        "armor": 40,
+        "hp": 360,
+        "heal": 80
+      }
+    ],
+    "img": "7bfg"
+  },
+  {
+    "id": "tank-fire",
+    "name": "Fire Tank",
+    "element": "fire",
+    "skills": [
+      {
+        "id": "attack",
+        "element": "fire"
+      },
+      {
+        "id": "boost",
+        "targets": [ "self" ],
+        "mode": "relative",
+        "charges": 1,
+        "triggers": [ "death" ],//death of which unit? self?
+        "attributes": [ "hp" ]//is it a revive skill then?
+      }
+    ],
+    "stats": [
+      {
+        "level": 1,
+        "attack": 20,
+        "armor": 10,
+        "hp": 80,
+        "skill1": 20
+      },
+      {
+        "level": 16,
+        "attack": 80,
+        "armor": 20,
+        "hp": 320,
+        "skill1": 20
+      }
+    ]
+  },
+  {
+    "id": "mage-fire",
+    "name": "Mage Fire",
+    "element": "fire",
+    "skills": [
+      {
+        "id": "attack",
+        "targets": [ "firstEnemy" ],
+        "element": "fire-magic",
+        "triggers": [ "turnEnd" ]
+      }
+    ],
+    "stats": [
+      {
+        "level": 1,
+        "attack": 10,
+        "armor": 0,
+        "hp": 80
+      },
+      {
+        "level": 16,
+        "attack": 40,
+        "armor": 0,
+        "hp": 320
+      }
+    ]
+  },
+  {
+    "id": "mage-earth",
+    "name": "Mage Earth",
+    "element": "earth",
+    "skills": [
+      {
+        "id": "attack",
+        "element": "earth"
+      },
+      {
+        "id": "aura",
+        "targets": [ "friendly" ],
+        "mode": "relative",
+        "attributes": [ "attack" ]
+      }
+    ],
+    "stats": [
+      {
+        "level": 1,
+        "attack": 10,
+        "armor": 0,
+        "hp": 34,
+        "initiative": -1,
+        "skill1": 10
+      },
+      {
+        "level": 16,
+        "attack": 40,
+        "armor": 0,
+        "hp": 136,
+        "initiative": -1,
+        "skill1": 10
+      }
+    ],
+    "img": "7bfg"
+  },
+  {
+    "id": "dragon-wind",
+    "name": "Dragon Wind",
+    "element": "wind",
+    "skills": [
+      {
+        "id": "attack",
+        "element": "wind",
+        "triggers": [ "battleStart", "turnEnd" ],
+        "targets": [ "inFront", "enemy" ]
+      }
+    ],
+    "stats": [
+      {
+        "level": 1,
+        "attack": 7,
+        "armor": 0,
+        "hp": 65
+      },
+      {
+        "level": 16,
+        "attack": 28,
+        "armor": 0,
+        "hp": 260
+      }
+    ]
+  },
+  {
+    "id": "mage-water",
+    "name": "Mage Water",
+    "element": "water",
+    "skills": [
+      {
+        "id": "attack",
+        "element": "water"
+      },
+      {
+        "id": "aura",
+        "attributes": [ "attack" ], /you might put attribute to the bottom of this?
+        "mode": "relative",
+        "targets": [ "enemy" ]
+      }
+    ],
+    "stats": [
+      {
+        "level": 1,
+        "attack": 12,
+        "armor": 0,
+        "hp": 41,
+        "initiative": -1,
+        "skill1": -10
+      },
+      {
+        "level": 16,
+        "attack": 48,
+        "armor": 0,
+        "hp": 164,
+        "initiative": -1,
+        "skill1": -10
+      }
+    ]
+  },
+  {
+    "id": "healer-wind",
+    "name": "Healer Wind",
+    "element": "wind",
+    "skills": [
+      {
+        "id": "attack",
+        "element": "wind"
+      },
+      {
+        "id": "aura",
+        "attributes": [ "heal" ], //no mode here?
+        "targets": [ "friendly" ]
+      }
+    ],
+    "stats": [
+      {
+        "level": 1,
+        "attack": 16,
+        "armor": 0,
+        "hp": 65,
+        "skill1": 4,
+        "initiative": 1
+      },
+      {
+        "level": 16,
+        "attack": 64,
+        "armor": 0,
+        "hp": 260,
+        "skill1": 16,
+        "initiative": 1
+      }
+    ]
+  },
+  {
+    "id": "healer-water",
+    "name": "Healer Water",
+    "element": "water",
+    "skills": [
+      {
+        "id": "attack",
+        "element": "water"
+      },
+      {
+        "id": "aura", //no mode here?
+        "attributes": [ "heal" ],
+        "targets": [ "first" ]
+      }
+    ],
+    "stats": [
+      {
+        "level": 1,
+        "attack": 10,
+        "armor": 0,
+        "hp": 61,
+        "initiative": -1,
+        "skill1": 15
+      },
+      {
+        "level": 16,
+        "attack": 40,
+        "armor": 0,
+        "hp": 244,
+        "initiative": -1,
+        "skill1": 60
+      }
+    ]
+  },
+  {
+    "id": "healer-fire",
+    "name": "Healer Fire",
+    "element": "fire",
+    "skills": [
+      {
+        "id": "attack",
+        "element": "fire"
+      },
+      {
+        "id": "boost",
+        "attributes": [ "heal" ],
+        "triggers": [ "battleStart" ],
+        "targets": [ "friendly" ]
+      }
+    ],
+    "stats": [
+      {
+        "level": 1,
+        "attack": 26,
+        "armor": 0,
+        "hp": 60,
+        "skill1": 3
+      },
+      {
+        "level": 16,
+        "attack": 64,
+        "armor": 0,
+        "hp": 240,
+        "skill1": 12
+      }
+    ]
+  },
+  {
+    "id": "healer-earth",
+    "name": "Healer Earth",
+    "element": "earth",
+    "skills": [
+      {
+        "id": "attack",
+        "element": "earth"
+      },
+      {
+        "id": "boost",
+        "attributes": [ "heal" ],
+        "triggers": [ "battleStart" ],
+        "targets": [ "friendly" ]
+      }
+    ],
+    "stats": [
+      {
+        "level": 1,
+        "attack": 10,
+        "armor": 5,
+        "hp": 62,
+        "initiative": 1,
+        "skill1": 3
+      },
+      {
+        "level": 16,
+        "attack": 40,
+        "armor": 20,
+        "hp": 248,
+        "initiative": 1,
+        "skill1": 12
+      }
+    ],
+    "img": "7bfg"
+  },
+  {
+    "id": "damage-dealer-fire",
+    "name": "Damage Dealer Fire",
+    "element": "fire",
+    "skills": [
+      {
+        "id": "attack",
+        "element": "fire"
+      },
+      {
+        "id": "attack",
+        "element": "fire-magic",
+        "targets": [ "firstEnemy" ],
+        "triggers": [ "turnEnd" ]
+      }
+    ],
+    "stats": [
+      {
+        "level": 1,
+        "attack": 8,
+        "armor": 0,
+        "hp": 60,
+        "initiative": 1,
+        "skill1": 3
+      },
+      {
+        "level": 16,
+        "attack": 32,
+        "armor": 0,
+        "hp": 240,
+        "initiative": 1,
+        "skill1": 16
+      }
+    ]
+  },
+  {
+    "id": "damage-dealer-water",
+    "name": "Damage Dealer Water",
+    "element": "water",
+    "skills": [
+      {
+        "id": "attack",
+        "element": "water",
+        "piercing": [ 100 ]
+      }
+    ],
+    "stats": [
+      {
+        "level": 1,
+        "attack": 30,
+        "armor": 0,
+        "hp": 69,
+        "initiative": 1
+      },
+      {
+        "level": 16,
+        "attack": 120,
+        "armor": 0,
+        "hp": 274,
+        "initiative": 1
+      }
+    ]
+  },
+  {
+    "id": "damage-dealer-earth",
+    "name": "Damage Dealer Earth",
+    "element": "earth",
+    "skills": [
+      {
+        "id": "attack",
+        "element": "earth"
+      },
+      {
+        "id": "boost",
+        "targets": [ "enemy" ],
+        "attributes": [ "heal" ],
+        "triggers": [ "battleStart" ]
+      }
+    ],
+    "stats": [
+      {
+        "level": 1,
+        "attack": 20,
+        "armor": 0,
+        "hp": 57,
+        "skill1": -2
+      },
+      {
+        "level": 16,
+        "attack": 80,
+        "armor": 0,
+        "hp": 228,
+        "skill1": -8
+      }
+    ]
+  },
+  {
+    "id": "damage-dealer-wind",
+    "name": "Damage Dealer Wind",
+    "element": "wind",
+    "skills": [
+      {
+        "id": "attack",
+        "element": "wind"
+      },
+      {
+        "id": "attack",
+        "element": "wind",
+        "triggers": [ "turnEnd" ]
+      }
+    ],
+    "stats": [
+      {
+        "level": 1,
+        "attack": 15,
+        "armor": 0,
+        "hp": 60,
+        "skill1": 2
+      },
+      {
+        "level": 16,
+        "attack": 60,
+        "armor": 0,
+        "hp": 240,
+        "skill1": 8
+      }
+    ],
+    "img": "7bfg"
+  },
+  {
+    "id": "berserker-wind",
+    "name": "Berserker Wind",
+    "element": "wind",
+    "skills": [
+      {
+        "id": "attack",
+        "element": "wind"
+      },
+      {
+        "id": "attack",
+        "element": "wind",
+        "minDamaged": 50
+      }
+    ],
+    "stats": [
+      {
+        "level": 1,
+        "attack": 27,
+        "armor": 0,
+        "hp": 76,
+        "initiative": 1
+
+      },
+      {
+        "level": 16,
+        "attack": 108,
+        "armor": 0,
+        "hp": 304,
+        "initiative": 1
+      }
+    ],
+    "img": "7bfg"
+  },
+  {
+    "id": "berserker-fire",
+    "name": "Berserker Fire",
+    "element": "fire",
+    "skills": [
+      {
+        "id": "attack",
+        "element": "fire"
+      },
+      {
+        "id": "cast",
+        "element": "fire",
+        "triggers": [ "death" ],
+        "targets": [ "enemy" ]
+      }
+    ],
+    "stats": [
+      {
+        "level": 1,
+        "attack": 25,
+        "armor": 0,
+        "hp": 60,
+        "skill1": 20
+      },
+      {
+        "level": 16,
+        "attack": 100,
+        "armor": 0,
+        "hp": 240,
+        "skill1": 80
+      }
+    ],
+    "img": "7bfg"
+  },
+  {
+    "id": "berserker-earth",
+    "name": "Berserker Earth",
+    "element": "earth",
+    "skills": [
+      {
+        "id": "attack",
+        "element": "earth"
+      },
+      {
+        "id": "boost",
+        "triggers": [ "attack" ],
+        "targets": [ "firstEnemy" ],
+        "attributes": [ "armor" ]
+      }
+    ],
+    "stats": [
+      {
+        "level": 1,
+        "attack": 25,
+        "armor": 0,
+        "hp": 72,
+        "skill1": -10
+      },
+      {
+        "level": 16,
+        "attack": 100,
+        "armor": 0,
+        "hp": 292,
+        "skill1": -40
+      }
+    ],
+    "img": "7bfg"
+  },
+  {
+    "id": "berserker-water",
+    "name": "Berserker Water",
+    "element": "water",
+    "skills": [
+      {
+        "id": "attack",
+        "element": "water"
+      },
+      {
+        "id": "attack",
+        "element": "water",
+        "minDamaged": 50
+      }
+    ],
+    "stats": [
+      {
+        "level": 1,
+        "attack": 27,
+        "armor": 4,
+        "hp": 86,
+        "initiative": -1
+
+      },
+      {
+        "level": 16,
+        "attack": 108,
+        "armor": 16,
+        "hp": 344,
+        "initiative": -1
+      }
+    ],
+    "img": "7bfg"
+  }
+]
