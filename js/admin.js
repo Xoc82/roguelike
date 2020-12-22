@@ -34,6 +34,10 @@ async function startGame() {
         hardReset: async () => {
             processMessages(await apiPostCall("player/reset"));
         },
+        deploy: async () => {
+            let result = await apiPostCall("commands/deploy");
+            alert(result);
+        },
         login: async () => {
             let data = {
                 name: document.getElementById("name").value,
