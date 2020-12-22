@@ -3,13 +3,104 @@
 	deadly: units die for the run
 	cramped: less places for the player
 
-instances:
-	-infinit difficulty?
-	-hero unlock
-	-themed
+Sequences:
+	-9 Rooms
+	-1 Boss
 
-boss rooms?
+Rooms:
+	-Periodic, once:
+		-Hero unlock
+		-Workshop unlock mechanics
+	-Periodic:
+		-Boss Rooms (deadly or boss)
+		(-PVP Rooms)
+	-Pseudorandom + once, deminishing frequence ()
+		-Unique Treasury 
+			Contains keys
+		-Bank Upgrades
+		-Prison Entry
+			-Fight
+	-Random
+		-Barracks (normal enemies, might have negative attributes)
+			-Drops coins linear
+		-Treasury
+		(-Inifinit Towers)
 
-mechanics to unlock:
-	-training heroes
-	-setting up lanes
+City:
+	-Bank:
+		-Upgrades (cost Gems):
+			more coins per run (+10%, additive)
+	-Mines???:
+		-Upgrade Gems/Time (cost Gems):
+			 Return of Investment 1d, 2d, ...
+	-Military Academy:
+		-Lanes for autofighting
+		-Queues for training
+	-Shoemaker:
+		-Spend coins for faster Progress
+
+Currencies:
+	-Per Run
+		-Coins (can be boostet, ² with time?)
+			-Hero Progress from 1 to 16
+			-Less dead heroes in deadly rooms
+	-Keys (linear with time, next key gets harder and harder):
+		Unlock heroes by choice
+	-Gems
+		Buy stuff in the city
+		
+
+Hero unlocks:
+	-Every 10 Level
+	-keys
+	-prisons
+	-Level Cost: 160, 250, 360, 490
+	
+Mechanics:
+	-Teleport Stone
+	-Autocoin Collector
+	-5 Hero Formation
+	-6 Hero Formation
+
+Common: 1
+Rare: 2
+Legs: 4
+Ascended: 8
+
+Start of game:
+	1. Intro
+	2. Fixed Hero unlock
+	3. 1 Monster Battle
+	4. 1 Monster Battle
+	5. 1 Monster Battle
+	6. 2 Monster Battle + Fixed Hero unlock + Fixed Hero unlock + Fixed Hero unlock + Fixed Hero unlock
+	7. 2 Monster Battle
+	8. 2 Monster Battle
+	9. 2 Monster Battle
+	10. Boss + Teleport Stone + Fixed Hero unlock
+	15. Unlock autocollect coins
+	20. Boss + Hero / Gems
+	...
+	30. Boss + Hero / Gems
+	...
+	40. Boss + Hero / Gems
+	...
+	50. Boss + Hero / Gems
+
+
+Coin Rewards:
+	RoomNumber/2 - RoomNumber
+
+How to decide what room/reward to chose:
+	-Take first matching room definitions
+		-Unique
+		-
+		
+
+Room consists of:
+1.
+	-Initial Description
+	-Enemies
+2.
+	-Reward Description
+	-Reward
