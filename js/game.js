@@ -1,6 +1,7 @@
 ﻿async function startGame() {
     let unitTypes = arrayToDictionaryById(await loadJson("json/unit-types.json"));
     let roomTypes = arrayToDictionaryById(await loadJson("json/room-types.json"));
+    let elements = arrayToDictionaryById(await loadJson("json/elements.json"));
     let currencyTypes = arrayToDictionaryById(await loadJson("json/currencies.json"));
     let achievementDescriptions = arrayToDictionaryById(await loadJson("json/achievements.json"));
     window.T = new Texer("json/texer.json");
@@ -8,6 +9,13 @@
     let encounterUnits = {};
     let currencies = {};
     currentBattle = buildReplay(currentBattle.log, currentBattle.squadA, currentBattle.squadB);
+
+    function findUnit(id) {
+        let unit = units[id];
+        if (!unit)
+            unit = encounterUnits[id];
+        return unit;
+    }
 
     function setUserInfo(text) {
         document.getElementById("user-info").innerText = text;
@@ -40,11 +48,17 @@
         var start = unitType.stats[i - 1];
         var end = unitType.stats[i];
         function interpolate(a, b) {
+            if (!a) a = 0;
+            if (!b) b = 0;
             return Math.floor(a + (b - a) * (level - start.level) / (end.level - start.level));
         }
         return {
             attack: interpolate(start.attack, end.attack),
-            hp: interpolate(start.hp, end.hp)
+            hp: interpolate(start.hp, end.hp),
+            armor: interpolate(start.armor, end.armor),
+            heal: interpolate(start.heal, end.heal),
+            initiative: interpolate(start.initiative, end.initiative),
+            skill1: interpolate(start.skill1, end.skill1)
         }
     }
 
@@ -247,6 +261,7 @@
                 let button = document.createElement("button");
                 button.dataset.action = "levelUp";
                 button.dataset.actionArgs = unitId;
+                button.dataset.tooltip = "levelUp";
                 button.innerText = "level up";
                 parent.appendChild(button);
             }
@@ -390,17 +405,131 @@
     });
 
     registerTooltips({
-        unit: id => {
+        unit: data => {
             let unitTemplate = document.getElementById("unit-tooltip-template").content;
             let node = document.importNode(unitTemplate, true);
 
-            let unit = units[id];
-            if (!unit)
-                unit = encounterUnits[id];
+            let unit = findUnit(data.id);
+
             let type = unitTypes[unit.typeId];
             let stats = getStatesAtLevel(type, unit.level);
+            let text = "";
+            for (var key in stats) {
+                text += `${key}: ${stats[key]}\n`;
+            }
+            text += "\n";
 
-            node.querySelector("h2").innerText = type.name;
+            function triggerName(triggers) {
+                if (!triggers)
+                    triggers = ["attack"];
+                let map = {
+                    attack: "his turn",
+                    death: "death",
+                    battleStart: "start of battle",
+                    turnEnd: "end of turn"
+                }
+                return triggers.map(s => map[s]).join(" and ");
+            }
+
+            function targetName(targets) {
+                if (!targets)
+                    targets = ["firstEnemy"];
+                let map = {
+                    firstEnemy: "first enemy",
+                    lastEnemy: "last enemy",
+                    first: "first unit",
+                    last: "last unit",
+                    friendly: "all friendly units",
+                    enemy: "all enemies",
+                    //all = Friendly | Enemy,
+                    self: "its own",
+                    inFront: "units in front",
+                    behind: "units behind",
+                    //others = InFront | Behind,
+                    second: "second unit",
+                    secondEnemy: "second enemy"
+                }
+                return targets.map(s => map[s]).join(" and ");
+            }
+            function attributeName(attributes) {
+                if (!attributes)
+                    attributes = ["firstEnemy"];
+                return attributes;
+            }
+            function formattedValue(value, mode) {
+                if (mode === "relative")
+                    return Math.abs(value) + "%";
+                return Math.abs(value);
+            }
+
+            function formatCharges(charges) {
+                if (charges === 1)
+                    return `This can trigger only once per battle. `;
+                if (charges > 1)
+                    return `This can trigger only ${charges} times per battle. `;
+                return "";
+            }
+
+            function formatMinDamaged(minDamaged) {
+                if (minDamaged > 0) {
+                    return `When at or below ${100 - minDamaged}% hp: `;
+                }
+                return "";
+            }
+
+            function formatElement(element) {
+                return elements[element].name;
+            }
+
+            function formatIncDec(value) {
+                return value >= 0 ? "increases" : "decreases";
+            }
+
+            for (var i = 0; i < type.skills.length; i++) {
+                let skill = type.skills[i];
+                let name = skill.name ?? skill.id;
+                text += name + ": ";
+                if (skill.id === "attack") {
+                    text += `${formatMinDamaged(skill.minDamaged)}On ${triggerName(skill.triggers)}, attacks ${targetName(skill.targets)} for ${stats.attack} ${formatElement(skill.element)} damage\n`;
+                }
+                if (skill.id === "cast") {
+                    let value = stats.skill1;
+                    text += `${formatMinDamaged(skill.minDamaged)}On ${triggerName(skill.triggers)}, attacks ${targetName(skill.targets)} for ${value} ${formatElement(skill.element)} damage\n`;
+                }
+                if (skill.id === "boost") {
+                    let value = stats.skill1;
+                    text += `${formatMinDamaged(skill.minDamaged)}On ${triggerName(skill.triggers)}, ${formatIncDec(value)} ${targetName(skill.targets)} ${attributeName(skill.attributes)} by ${formattedValue(value, skill.mode)}. ${formatCharges(skill.charges)}`;
+                }
+                if (skill.id === "aura") {
+                    let value = stats.skill1;
+                    text += `While alive ${formatIncDec(value)} ${targetName(skill.targets)} ${attributeName(skill.attributes)} by ${formattedValue(value, skill.mode)}.`;
+                }
+                text += "\n\n";
+            }
+
+            node.querySelector("h3").innerText = type.name;
+            node.querySelector(".text").innerText = text;
+            return node;
+        },
+        levelUp: data => {
+            let unitTemplate = document.getElementById("unit-level-up-tooltip-template").content;
+            let node = document.importNode(unitTemplate, true);
+
+            let unit = findUnit(data.actionArgs);
+
+            let type = unitTypes[unit.typeId];
+            let stats = getStatesAtLevel(type, unit.level);
+            let nextStats = getStatesAtLevel(type, unit.level + 1);
+            let text = "";
+
+            for (var key in stats) {
+                let now = stats[key];
+                let then = nextStats[key];
+                if (now != then) {
+                    text += `${key}: ${Math.abs(now)} => ${Math.abs(then)}\n`;
+                }
+            }
+            node.querySelector(".text").innerText = text;
             return node;
         }
     });

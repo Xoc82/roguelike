@@ -91,7 +91,7 @@ function initEngine() {
         if (dragNode && startNode) {
             e.dataTransfer.setData("start", getDragAndDropId(startNode));
             e.dataTransfer.setData("node", getDragAndDropId(dragNode));
-            console.log("dragstart: " + dragNode.id);
+            //console.log("dragstart: " + dragNode.id);
             hackyStartNode = startNode;
         }
     });
@@ -103,7 +103,7 @@ function initEngine() {
         if (hackyStartNode && end) {
             let action = getDragAndDropAction(start.dataset.dropZone, end.dataset.dropZone);
             if (action) {
-                console.log("dragover: " + start.dataset.dropZone + end.dataset.dropZone);
+                //console.log("dragover: " + start.dataset.dropZone + end.dataset.dropZone);
                 e.preventDefault();
             }
         }
@@ -157,10 +157,9 @@ function initEngine() {
             alert("tooltip creator missing: " + tooltipId);
             return;
         }
-        let id = element.dataset.id;
 
         deleteAllChildren(tooltipContainer);
-        tooltipContainer.appendChild(tooltipCreator(id));
+        tooltipContainer.appendChild(tooltipCreator(element.dataset));
         tooltipContainer.style.display = "block";
         let offset = getPageOffset(element);
         tooltipContainer.style.left = (offset.x + element.offsetWidth + 10) + "px";
@@ -169,7 +168,6 @@ function initEngine() {
 
     function hideTooltip() {
         tooltipContainer.style.display = "none";
-        console.log("hide");
     }
 
     document.addEventListener("mousemove", e => {
