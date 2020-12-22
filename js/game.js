@@ -74,9 +74,7 @@
         let placementNodes = laneNode.children;
         for (let i = 0; i < placementNodes.length; i++) {
             let placementNode = placementNodes[i];
-            let unitNodes = placementNode.children;
-            if (unitNodes.length > 0)
-                unitNodes[0].remove();
+            deleteAllChildren(placementNode);
             if (i >= placements.length)
                 continue;
             let placement = placements[i];
@@ -344,7 +342,7 @@
             encounterNode.style.display = "none";
             if (room.type === "combat") {
                 encounterNode.style.display = "block";
-                encounterUnits = room.encounter.units;
+                encounterUnits = room.encounter.squad.units;
                 fillLane(laneNode, room.encounter.squad.units, room.encounter.squad.order);
             }
         },
@@ -391,6 +389,21 @@
         }
     });
 
+    registerTooltips({
+        unit: id => {
+            let unitTemplate = document.getElementById("unit-tooltip-template").content;
+            let node = document.importNode(unitTemplate, true);
+
+            let unit = units[id];
+            if (!unit)
+                unit = encounterUnits[id];
+            let type = unitTypes[unit.typeId];
+            let stats = getStatesAtLevel(type, unit.level);
+
+            node.querySelector("h2").innerText = type.name;
+            return node;
+        }
+    });
 
     if (await loadUserInfo()) {
         await loadUnits();

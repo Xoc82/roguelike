@@ -175,3 +175,13 @@ body {
     margin: 5px;
     border: 1px solid #aaaaaa;
 }
+
+.tooltip {
+    position: absolute;
+    z-index: 100;
+    min-width: 50px;
+    min-height: 20px;
+    background-color: white;
+    border: 1px solid black;
+    box-shadow: 1px 0 15px rgba(0, 0, 0, 0.5);
+}

@@ -1,10 +1,17 @@
 ﻿let allMessageHandlers = {}
 let allActions = {}
 let allDragAndDropHandlers = {}
+let allTooltips = {}
 
-function registerActions(actions) {
-    for (let name in actions) {
-        allActions[name] = actions[name];
+function registerActions(callbacks) {
+    for (let name in callbacks) {
+        allActions[name] = callbacks[name];
+    }
+}
+
+function registerTooltips(callbacks) {
+    for (let name in callbacks) {
+        allTooltips[name] = callbacks[name];
     }
 }
 
@@ -90,6 +97,7 @@ function initEngine() {
     });
 
     document.addEventListener("dragover", e => {
+        hideTooltip();
         let start = hackyStartNode;//findDropZone(e.srcElement);
         let end = findDropZone(e.target);
         if (hackyStartNode && end) {
@@ -138,6 +146,54 @@ function initEngine() {
         }
     });
 
+    let tooltipContainer = document.getElementById("tooltip");
+    let currentTooltipElement = null;
+    let currentTooltip = null;
+
+    function showTooltip(element, x, y) {
+        let tooltipId = element.dataset.tooltip;
+        var tooltipCreator = allTooltips[tooltipId];
+        if (!tooltipCreator) {
+            alert("tooltip creator missing: " + tooltipId);
+            return;
+        }
+        let id = element.dataset.id;
+
+        deleteAllChildren(tooltipContainer);
+        tooltipContainer.appendChild(tooltipCreator(id));
+        tooltipContainer.style.display = "block";
+        let offset = getPageOffset(element);
+        tooltipContainer.style.left = (offset.x + element.offsetWidth + 10) + "px";
+        tooltipContainer.style.top = (offset.y + element.offsetHeight + 10) + "px";
+    }
+
+    function hideTooltip() {
+        tooltipContainer.style.display = "none";
+        console.log("hide");
+    }
+
+    document.addEventListener("mousemove", e => {
+        let target = e.target;
+        if (tooltipContainer.contains(target))
+            return;
+        if (currentTooltipElement !== target) {
+            currentTooltipElement = target;
+            while (target != null) {
+                if (target.dataset.tooltip) {
+                    if (currentTooltip !== target) {
+                        currentTooltip = target;
+                        showTooltip(target, e.pageX, e.pageY);
+                    }
+                    return;
+                }
+                target = target.parentElement;
+            }
+            if (currentTooltip) {
+                currentTooltip = null;
+                hideTooltip();
+            }
+        }
+    });
 }
 
 
@@ -145,7 +201,7 @@ function initEngine() {
 
 function openPanel(panelName) {
     let qa = document.querySelector('.panel.active');
-    if(qa !== null) qa.classList.remove('active');
+    if (qa !== null) qa.classList.remove('active');
     qa = document.querySelector('#guiMainPanel #gui' + panelName);
     if (qa !== null) qa.classList.add('active');
 }
@@ -154,15 +210,15 @@ function openPanel(panelName) {
 registerActions({
     openPanel: target => {
         openPanel(target); // generic for now
-/*        switch (target) {
-            case "Admin":
-            case "Followers":
-            case "Inventory":
-            case "Dungeon":
-            case "Leaderboard":
-                break;
-            default:
-                break;
-        }*/
+        /*        switch (target) {
+                    case "Admin":
+                    case "Followers":
+                    case "Inventory":
+                    case "Dungeon":
+                    case "Leaderboard":
+                        break;
+                    default:
+                        break;
+                }*/
     }
 });

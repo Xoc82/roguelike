@@ -7,7 +7,7 @@
 <body>
     <div id="gui">
         <template id="unit-template">
-            <div class="unit">
+            <div data-tooltip="unit" class="unit">
                 <div class="header">Hunter</div>
                 <div class="level">20</div>
                 <div class="attack">Atk: <span class="value">20</span></div>
@@ -17,18 +17,30 @@
                 </div>
             </div>
         </template>
+        <template id="unit-tooltip-template">
+            <div class="unit-tooltip">
+                <h2>Hunter</h2>
+                <div>Lorem impsum</div>
+                <div>Lorem impsum</div>
+                <div>Lorem impsum</div>
+                <div>Lorem impsum</div>
+            </div>
+        </template>
+        <div id="tooltip" class="tooltip" style="display: none;"></div>
         <div id="guiHead">
             <h3>Roguelike v0.00003</h3>
             <div>
                 Account <span id="user-info"></span> - Name <input id="name" type="text" name="name" /> - Password <input id="password" type="password" name="password" />
                 <button data-action="login">Login</button>
             </div>
-            <div id="guiHeadMenu">Menu : 
-                <span data-action="openPanel" data-action-args="City">City</span> - 
-                <span data-action="openPanel" data-action-args="Dungeon">Dungeon</span> - 
-                <span data-action="openPanel" data-action-args="Inventory">Inventory</span> - 
-                <span data-action="openPanel" data-action-args="Leaderboard">Leaderboard</span> - 
-                <a href="admin.htm">Admin Area</a></div>
+            <div id="guiHeadMenu">
+                Menu :
+                <span data-action="openPanel" data-action-args="City">City</span> -
+                <span data-action="openPanel" data-action-args="Dungeon">Dungeon</span> -
+                <span data-action="openPanel" data-action-args="Inventory">Inventory</span> -
+                <span data-action="openPanel" data-action-args="Leaderboard">Leaderboard</span> -
+                <a href="admin.htm">Admin Area</a>
+            </div>
         </div>
         <div id="guiMain">
             <div id="guiMainPanel">
@@ -103,23 +115,24 @@
         <div id="guiBottom">
             <h3>Bottom zone (?)</h3>
         </div>
-        <script>
-            var isLocal = location.hostname == "" || location.hostname === "localhost" || location.hostname === "127.0.0.1";
-            var script = document.createElement('script');
-            script.src = location.port != "5001" && (location.hostname == "" || location.hostname === "localhost" || location.hostname === "127.0.0.1") ? "file:///C:/api.js" : "/static/api.js";
-            document.head.appendChild(script);
-        </script>
-        <script src="js/helpers.js"></script>
-        <script src="js/engine.js"></script>
-        <script src="js/websocket.js"></script>
-        <script src="js/texer.js"></script>
-        <script src="js/game.js"></script>
-		<script src="https://cdn.jsdelivr.net/npm/@widgetbot/crate@3" async defer>
-            if (!isLocal)
-                new Crate({
-                    server: '753237681131094137', // Prototype-Design
-                    channel: '789210680858378311' // #on-topic-discussion
-                });
-        </script>
+    </div>
+    <script>
+        var isLocal = location.hostname == "" || location.hostname === "localhost" || location.hostname === "127.0.0.1";
+        var script = document.createElement('script');
+        script.src = location.port != "5001" && (location.hostname == "" || location.hostname === "localhost" || location.hostname === "127.0.0.1") ? "file:///C:/api.js" : "/static/api.js";
+        document.head.appendChild(script);
+    </script>
+    <script src="js/helpers.js"></script>
+    <script src="js/engine.js"></script>
+    <script src="js/websocket.js"></script>
+    <script src="js/texer.js"></script>
+    <script src="js/game.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@widgetbot/crate@3" async defer>
+        if (!isLocal)
+            new Crate({
+                server: '753237681131094137', // Prototype-Design
+                channel: '789210680858378311' // #on-topic-discussion
+            });
+    </script>
 </body>
 </html>
