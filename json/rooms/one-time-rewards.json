@@ -1,0 +1,26 @@
+﻿[
+  {
+    "id": "hero1",
+    "room": 5,
+    "type": "hero-unlock",
+    "hero": "hero1"
+  },
+  {
+    "id": "hero2",
+    "room": 5,
+    "type": "hero-unlock",
+    "hero": "hero2"
+  },
+  {
+    "id": "hero3",
+    "room": 5,
+    "type": "hero-unlock",
+    "hero": "hero2"
+  },
+  {
+    "id": "hero4",
+    "room": 5,
+    "type": "hero-unlock",
+    "hero": "hero2"
+  }
+]
