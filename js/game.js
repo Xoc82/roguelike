@@ -125,7 +125,7 @@
     }
 
     function buildReplay(log, squadA, squadB) {
-        let result = { steps: [], units: {0: [], 1: []} };
+        let result = { steps: [], units: { 0: [], 1: [] } };
         let unitsA = squadA.order.map(u => squadA.units[u.id]);
         let unitsB = squadB.order.map(u => squadB.units[u.id]);
         //console.log(unitsA);
@@ -218,8 +218,8 @@
         await initWebSocket(processMessage);
     }
 
-    async function loadCurrentRoom() {
-        processMessage(await apiGetCall("player/room"));
+    async function loadCurrentRun() {
+        processMessage(await apiGetCall("player/run"));
     }
 
     async function loadCurrencies() {
@@ -287,10 +287,6 @@
                     units: units
                 });
         },
-        fightEncounter: async () => {
-            let lane = { "units": getLaneData(document.getElementById("lane")) };
-            processMessages(await apiPostCall("player/room/fight", lane));
-        },
         leaderboardFightsRecalc: async () => {
             await apiPostCall("game/update-fights-leaderboard");
             await updateLeaderBoardFights();
@@ -304,14 +300,15 @@
             input.value = "";
             await apiPostCall("chat", text);
         },
+        fightEncounter: async () => {
+            let lane = { "units": getLaneData(document.getElementById("lane")) };
+            processMessages(await apiPostCall("player/run/fight", lane));
+        },
         collectRoom: async () => {
-            processMessages(await apiPostCall("player/room/collect"));
+            processMessages(await apiPostCall("player/run/collect"));
         },
         newRun: async () => {
-            processMessages(await apiPostCall("player/new-run"));
-        },
-        hardReset: async () => {
-            processMessages(await apiPostCall("player/reset"));
+            processMessages(await apiPostCall("player/run/new"));
         },
         login: async () => {
             let data = {
@@ -402,7 +399,7 @@
         await updateLeaderBoardFights();
         await initServerMessages();
         await joinChat();
-        await loadCurrentRoom();
+        await loadCurrentRun();
         canvas = document.getElementById("bAnim");
         ctx = canvas.getContext("2d");
         W = canvas.width;

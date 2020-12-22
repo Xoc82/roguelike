@@ -54,29 +54,6 @@ function initEngine() {
                 alert("action missing: " + actionName);
         }
     });
-    document.querySelectorAll('#guiHeadMenu span').forEach(n => n.addEventListener("click", (e) => {
-        let target = e.target.getAttribute('data-mlink');
-        switch (target) {
-            case "Admin":
-            case "Followers":
-            case "Inventory":
-            case "Dungeon":
-            case "Leaderboard":
-                openPanel(target);
-                break;
-            default:
-                break;
-        }
-    }));
-    function openPanel(panelName) {
-        let qa = document.querySelector('.panel.active');
-        if(qa !== null) qa.classList.remove('active');
-        qa = document.querySelector('#guiMainPanel #gui' + panelName);
-        if (qa !== null) qa.classList.add('active');
-    }
-
-
-
 
     let hackyStartNode = null;
 
@@ -162,3 +139,30 @@ function initEngine() {
     });
 
 }
+
+
+// ==== GUI STUFF ====
+
+function openPanel(panelName) {
+    let qa = document.querySelector('.panel.active');
+    if(qa !== null) qa.classList.remove('active');
+    qa = document.querySelector('#guiMainPanel #gui' + panelName);
+    if (qa !== null) qa.classList.add('active');
+}
+
+
+registerActions({
+    openPanel: target => {
+        openPanel(target); // generic for now
+/*        switch (target) {
+            case "Admin":
+            case "Followers":
+            case "Inventory":
+            case "Dungeon":
+            case "Leaderboard":
+                break;
+            default:
+                break;
+        }*/
+    }
+});

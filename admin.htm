@@ -28,7 +28,7 @@
                 Account <span id="user-info"></span> - Name <input id="name" type="text" name="name" /> - Password <input id="password" type="password" name="password" />
                 <button data-action="login">Login</button>
             </div>
-            <div id="guiHeadMenu">Menu : <span data-mlink="Admin">Admin</span> - <a href="default.htm">Game</a></div>
+            <div id="guiHeadMenu">Menu : <span data-action="openPanel" data-action-args="Admin">Admin</span> - <a href="default.htm">Game</a></div>
         </div>
         <div id="guiMain">
             <div id="guiMainPanel">
@@ -37,7 +37,8 @@
                     <a href="/api/game/balancing" target="_blank">Calc Balancing</a><br />
                     <a href="/api/game/skills" target="_blank">Skills</a><br />
                     <button data-action="reloadJson">Reload Json Definitions</button>
-                    <button data-action="giveMeCC">Give me CC!</button><br/>
+                    <button data-action="giveMeCC">Give me CC!</button><br />
+                    <button data-action="hardReset">!hard reset!</button>
                 </div>
             </div>
         </div>

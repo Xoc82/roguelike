@@ -31,6 +31,9 @@ async function startGame() {
         reloadJson: async () => {
             await apiPostCall("game/reload-json-definitions");
         },
+        hardReset: async () => {
+            processMessages(await apiPostCall("player/reset"));
+        },
         login: async () => {
             let data = {
                 name: document.getElementById("name").value,
