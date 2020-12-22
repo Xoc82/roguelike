@@ -174,7 +174,7 @@ function initEngine() {
 
     document.addEventListener("mousemove", e => {
         let target = e.target;
-        if (tooltipContainer.contains(target))
+        if (tooltipContainer && tooltipContainer.contains(target))
             return;
         if (currentTooltipElement !== target) {
             currentTooltipElement = target;
