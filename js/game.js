@@ -162,7 +162,7 @@
                         action: "GHIT",
                         data: unit,
                         value: event.value,
-                        //pos: 6 - i,
+                        pos: (event.source > 0 ? event.source - 1 : -event.source - 1),
                         target: event.target > 0 ? "you" : "other"
                     });
                     break;
@@ -172,14 +172,14 @@
                         action: "RHIT",
                         data: unit,
                         value: event.value,
-                        pos: 6 - i,
+                        pos: (event.target > 0 ? event.target - 1 : -event.target - 1),
                         target: event.target > 0 ? "you" : "other"
                     });
                     break;
                 case "death":
                     result.steps.push({
                         action: "DIE",
-                        pos: Math.abs(event.target),
+                        pos: Math.abs(event.target) - 1,
                         target: event.target > 0 ? "you" : "other"
                     });
                     break;
@@ -433,30 +433,47 @@ function Graphics() {
             { x: W / 2 + 440, y: H - 300 },
             { x: W / 2 + 450, y: H - 320 },
         ]
-        var step = currentBattle.steps[bStep];
-        var delta = clamp(bStepAnim - bStep, 0, 1);
-        //currentBattle
-        for (var sid = 0; sid <= 1; ++sid) {
-            var side = sid ? "other" : "you";
-            var pos = sid ? otherPos : youPos;
-            for (var i = 5; i > 0; --i) {
-                if (step.target == side && step.pos == i && step.action == "SPAWN") {
-                    ctx.save();
-                    ctx.globalAlpha = delta;
-                    //this.drawMonster(ctx, gBattle[side][i].id, pos[i].x, pos[i].y, gBattle[side][i], reverse, mapf(i, 0, 6, 2, 1), gBattle[side][i].lvl, undefined, undefined, gBattle[side][i].prom);
-                    this.drawMonster(ctx, 0, pos[i + 1].x, pos[i + 1].y, 0, false, mapf(i + 1, 0, 6, 2, 1), 1, undefined, undefined, 0);
-                    ctx.restore();
-                } else if (step.target == side && step.pos == i && step.action == "HIT") {
-                } else {
-                    if (currentBattle.units[sid][i].show == true) {
+        if (currentBattle.steps[bStep] !== undefined) {
+            var step = currentBattle.steps[bStep];
+            var delta = clamp(bStepAnim - bStep, 0, 1);
+            var side;
+            //currentBattle
+            for (var sid = 0; sid <= 1; ++sid) {
+                side = sid ? "other" : "you";
+                var pos = sid ? otherPos : youPos;
+                for (var i = 5; i >= 0; --i) {
+                    if (step.target == side && step.pos == i && step.action == "SPAWN") {
+                        ctx.save();
+                        ctx.globalAlpha = delta;
+                        //this.drawMonster(ctx, gBattle[side][i].id, pos[i].x, pos[i].y, gBattle[side][i], reverse, mapf(i, 0, 6, 2, 1), gBattle[side][i].lvl, undefined, undefined, gBattle[side][i].prom);
                         this.drawMonster(ctx, 0, pos[i + 1].x, pos[i + 1].y, 0, false, mapf(i + 1, 0, 6, 2, 1), 1, undefined, undefined, 0);
+                        ctx.restore();
+                    } else if (step.target == side && step.pos == i && step.action == "DIE") {
+                        ctx.save();
+                        ctx.globalAlpha = 1 - delta;
+                        var rpos = sid ? youPos : otherPos;
+                        this.drawMonster(ctx, 0, pos[i + 1].x, pos[i + 1].y, 0, false, mapf(i + 1, 0, 6, 2, 1), 1, undefined, undefined, 0);
+                        ctx.restore();
+                    } else {
+                        if (currentBattle.units[sid][i].show == true) {
+                            this.drawMonster(ctx, 0, pos[i + 1].x, pos[i + 1].y, 0, false, mapf(i + 1, 0, 6, 2, 1), 1, undefined, undefined, 0);
+                        }
+                        if (step.target == side && step.pos == i && step.action == "GHIT") {
+                            var rpos = sid ? youPos : otherPos;
+                            //this.drawMonster(ctx, 0, pos[i + 1].x, pos[i + 1].y, 0, false, mapf(i + 1, 0, 6, 2, 1), 1, undefined, undefined, 0);
+                            text(ctx, "Give Hit: " + step.value, rpos[i + 1].x, rpos[i + 1].y - 20, "40px " + FONT, "black", "left", "middle");
+                        }
+                        if (step.target == side && step.pos == i && step.action == "RHIT") {
+                            //this.drawMonster(ctx, 0, pos[i + 1].x, pos[i + 1].y, 0, false, mapf(i + 1, 0, 6, 2, 1), 1, undefined, undefined, 0);
+                            text(ctx, "Receive Hit: " + step.value, pos[i + 1].x, pos[i + 1].y - 20, "40px " + FONT, "black", "left", "middle");
+                        }
                     }
                 }
             }
         }
         var x = W * 0.05;
         var y = H * 0.94;
-        text(ctx, "Battle speed: x" + battleSpeed, W * 0.4, y - 125, "32px" + FONT, "black", "left", "middle");
+        text(ctx, "Battle speed: x" + battleSpeed, W * 0.4, y - 125, "32px " + FONT, "black", "left", "middle");
     }
     this.drawMonster = function (ctx, id, x, y, bstats, reverse, scale, level, available, base, prom, hide_prom) {
         reverse = reverse || false;
@@ -478,9 +495,11 @@ function Graphics() {
         if (delta > 1000 / 20 || delta < 0) delta = 1000 / 20;
         bStepAnim += (delta / 1600) * battleSpeed;
         let cstep = Math.floor(bStepAnim);
-        if (cstep > bStep) {
+        if (currentBattle.steps[bStep] !== undefined && cstep > bStep) {
             if (currentBattle.steps[bStep].action == "SPAWN")
                 currentBattle.units[currentBattle.steps[bStep].target == "you" ? 0 : 1][currentBattle.steps[bStep].pos].show = true;
+            if (currentBattle.steps[bStep].action == "DIE")
+                currentBattle.units[currentBattle.steps[bStep].target == "you" ? 0 : 1][currentBattle.steps[bStep].pos].show = false;
             bStep++;
         }
     }
@@ -564,6 +583,6 @@ currentBattle = {
 };
 bStep = 0;
 bStepAnim = 0;
-var battleSpeed = 3;
+var battleSpeed = 2;
 var FONT = 'Arial';
 document.addEventListener('DOMContentLoaded', () => startGame());
