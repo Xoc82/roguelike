@@ -162,8 +162,18 @@ function initEngine() {
         tooltipContainer.appendChild(tooltipCreator(element.dataset));
         tooltipContainer.style.display = "block";
         let offset = getPageOffset(element);
-        tooltipContainer.style.left = (offset.x + element.offsetWidth + 10) + "px";
-        tooltipContainer.style.top = (offset.y + element.offsetHeight + 10) + "px";
+        let clientRect = element.getBoundingClientRect();
+        let midX = (clientRect.left + clientRect.width / 2);
+        let midY = (clientRect.top + clientRect.height / 2);
+        let px = midX < window.innerWidth / 2
+            ? offset.x + element.offsetWidth + 10
+            : offset.x - tooltipContainer.offsetWidth - 10;
+        let py = midY < window.innerHeight / 2
+            ? offset.y + element.offsetHeight + 10
+            : offset.y - tooltipContainer.offsetHeight - 10;
+
+        tooltipContainer.style.left = px + "px";
+        tooltipContainer.style.top = py + "px";
     }
 
     function hideTooltip() {
